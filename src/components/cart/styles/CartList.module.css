@@ -1,0 +1,23 @@
+.list {
+  height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-right: 0.5rem;
+  width: 100%;
+}
+
+@media (max-width: 992px) {
+  .list {
+    max-height: 50vh;
+    padding-right: 0.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .list {
+    max-height: none;
+    padding-right: 0;
+  }
+}

@@ -1,0 +1,41 @@
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.counter input {
+  width: 3rem;
+  text-align: center;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.counter input::-webkit-inner-spin-button,
+.counter input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.counter button {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background: #fff;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.counter button:hover {
+  background-color: #f0f0f0;
+}

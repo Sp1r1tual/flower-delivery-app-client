@@ -4,6 +4,11 @@ import { CartType } from "@/types";
 
 import { checkoutCart } from "@/store/redux/cartThunks";
 
+import {
+  saveCartToLocalStorage,
+  loadCartFromLocalStorage,
+} from "@/utils/state/localStorageCart";
+
 interface ICartState {
   items: CartType[];
   isLoading: boolean;
@@ -12,7 +17,7 @@ interface ICartState {
 }
 
 const initialState: ICartState = {
-  items: [],
+  items: loadCartFromLocalStorage(),
   isLoading: false,
   error: null,
 };
@@ -24,14 +29,36 @@ const cartSlice = createSlice({
     addItem: (state, action: PayloadAction<CartType>) => {
       const existing = state.items.find((i) => i.id === action.payload.id);
 
-      if (existing) {
-        existing.quantity += action.payload.quantity;
-      } else {
+      if (!existing) {
         state.items.push(action.payload);
+        saveCartToLocalStorage(state.items);
+        return;
       }
+
+      existing.quantity += action.payload.quantity;
+      saveCartToLocalStorage(state.items);
     },
-    removeItem: (state, action: PayloadAction<{ id: string }>) => {
-      state.items = state.items.filter((i) => i.id !== action.payload.id);
+    removeItem: (
+      state,
+      action: PayloadAction<{ id: string; quantity?: number }>,
+    ) => {
+      const item = state.items.find((i) => i.id === action.payload.id);
+
+      if (!item) return;
+
+      if (!action.payload.quantity) {
+        state.items = state.items.filter((i) => i.id !== action.payload.id);
+        saveCartToLocalStorage(state.items);
+        return;
+      }
+
+      item.quantity -= action.payload.quantity;
+
+      if (item.quantity <= 0) {
+        state.items = state.items.filter((i) => i.id !== action.payload.id);
+      }
+
+      saveCartToLocalStorage(state.items);
     },
     updateItemQuantity: (
       state,
@@ -42,9 +69,13 @@ const cartSlice = createSlice({
       if (item) {
         item.quantity = action.payload.quantity;
       }
+
+      saveCartToLocalStorage(state.items);
     },
     clearCart: (state) => {
       state.items = [];
+
+      saveCartToLocalStorage(state.items);
     },
   },
   extraReducers: (builder) => {

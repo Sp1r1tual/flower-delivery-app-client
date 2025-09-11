@@ -15,9 +15,9 @@ type RowProps = {
 
 type OrderFormProps = {
   onSubmit: (data: {
-    name: string;
+    userName: string;
     email: string;
-    phone: string;
+    phoneNumber: string;
     address: string;
   }) => void;
 };

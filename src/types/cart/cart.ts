@@ -16,10 +16,41 @@ type CartSyncPayload = {
 };
 
 type OrderFormData = {
-  name: string;
+  userName: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
 };
 
-export type { CartType, CartListProps, CartSyncPayload, OrderFormData };
+type OrderType = {
+  formData: OrderFormData[];
+  cartData: CartType[];
+};
+
+type CartCheckoutPayload = {
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+  cart: { productId: string; quantity: number }[];
+};
+
+type OrderResponse = {
+  orderNumber: number;
+  totalPrice: number;
+  items: CartType[];
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  address: string;
+};
+
+export type {
+  CartType,
+  CartListProps,
+  CartSyncPayload,
+  OrderFormData,
+  OrderType,
+  CartCheckoutPayload,
+  OrderResponse,
+};

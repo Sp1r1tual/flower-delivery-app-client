@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { CartType, CartSyncPayload } from "@/types";
+import { CartType } from "@/types";
 
-import { fetchCart, syncCart } from "@/store/redux/cartThunks";
+import { checkoutCart } from "@/store/redux/cartThunks";
 
 interface ICartState {
   items: CartType[];
   isLoading: boolean;
   error: string | null;
+  lastOrderNumber?: number;
 }
 
 const initialState: ICartState = {
@@ -21,83 +22,49 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<CartType>) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id,
-      );
+      const existing = state.items.find((i) => i.id === action.payload.id);
 
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
+      if (existing) {
+        existing.quantity += action.payload.quantity;
       } else {
         state.items.push(action.payload);
       }
     },
+    removeItem: (state, action: PayloadAction<{ id: string }>) => {
+      state.items = state.items.filter((i) => i.id !== action.payload.id);
+    },
+    updateItemQuantity: (
+      state,
+      action: PayloadAction<{ id: string; quantity: number }>,
+    ) => {
+      const item = state.items.find((i) => i.id === action.payload.id);
 
-    removeItem: (state, action: PayloadAction<CartSyncPayload>) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id,
-      );
-
-      if (existingItem) {
-        existingItem.quantity -= action.payload.quantity;
-
-        if (existingItem.quantity <= 0) {
-          state.items = state.items.filter(
-            (item) => item.id !== action.payload.id,
-          );
-        }
+      if (item) {
+        item.quantity = action.payload.quantity;
       }
     },
-
-    updateItemQuantity: (state, action: PayloadAction<CartSyncPayload>) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id,
-      );
-
-      if (existingItem) {
-        existingItem.quantity = action.payload.quantity;
-      }
+    clearCart: (state) => {
+      state.items = [];
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCart.pending, (state) => {
+      .addCase(checkoutCart.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchCart.fulfilled,
-        (state, action: PayloadAction<CartType[]>) => {
-          state.isLoading = false;
-          state.items = action.payload;
-        },
-      )
-      .addCase(fetchCart.rejected, (state, action) => {
+      .addCase(checkoutCart.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload?.message ?? null;
+        state.items = [];
+        state.lastOrderNumber = action.payload.orderNumber;
       })
-
-      .addCase(syncCart.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(
-        syncCart.fulfilled,
-        (state, action: PayloadAction<CartSyncPayload>) => {
-          state.isLoading = false;
-
-          const item = state.items.find((i) => i.id === action.payload.id);
-
-          if (item) {
-            item.quantity = action.payload.quantity;
-          }
-        },
-      )
-      .addCase(syncCart.rejected, (state, action) => {
+      .addCase(checkoutCart.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload?.message ?? null;
+        state.error = action.payload?.message || "Checkout failed";
       });
   },
 });
 
-export const { addItem, removeItem, updateItemQuantity } = cartSlice.actions;
+export const { addItem, removeItem, updateItemQuantity, clearCart } =
+  cartSlice.actions;
 export default cartSlice.reducer;

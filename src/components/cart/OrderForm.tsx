@@ -47,16 +47,16 @@ const OrderForm = ({ onSubmit }: OrderFormProps) => {
           type="text"
           id="username"
           placeholder="Enter your name..."
-          {...register("name", {
+          {...register("userName", {
             required: FORM_ERRORS.fillThisField,
             validate: (value) =>
               validateUsername(value) || FORM_ERRORS.invalidUsername,
-            onChange: () => handleInputChange("name"),
+            onChange: () => handleInputChange("userName"),
           })}
         />
         <div className={styles.errorContainer}>
-          {errors.name && (
-            <span className={styles.error}>{errors.name.message}</span>
+          {errors.userName && (
+            <span className={styles.error}>{errors.userName.message}</span>
           )}
         </div>
       </div>
@@ -87,16 +87,16 @@ const OrderForm = ({ onSubmit }: OrderFormProps) => {
           type="tel"
           id="phone"
           placeholder="Enter your phone..."
-          {...register("phone", {
+          {...register("phoneNumber", {
             required: FORM_ERRORS.fillThisField,
             validate: (value) =>
               validatePhone(value) || FORM_ERRORS.invalidPhone,
-            onChange: () => handleInputChange("phone"),
+            onChange: () => handleInputChange("phoneNumber"),
           })}
         />
         <div className={styles.errorContainer}>
-          {errors.phone && (
-            <span className={styles.error}>{errors.phone.message}</span>
+          {errors.phoneNumber && (
+            <span className={styles.error}>{errors.phoneNumber.message}</span>
           )}
         </div>
       </div>

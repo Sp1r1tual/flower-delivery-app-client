@@ -1,43 +1,26 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { CartType, CartSyncPayload, ApiError } from "@/types";
+import { CartCheckoutPayload, OrderResponse, ApiError } from "@/types";
 
 import { CartService } from "@/services/cartService";
 
-const fetchCart = createAsyncThunk<CartType[], void, { rejectValue: ApiError }>(
-  "cart/fetchCart",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data } = await CartService.getCart();
-
-      return data;
-    } catch (error) {
-      const err = error as AxiosError<ApiError>;
-
-      return rejectWithValue(
-        err.response?.data || { message: "Cart loading error" },
-      );
-    }
-  },
-);
-
-const syncCart = createAsyncThunk<
-  CartSyncPayload,
-  CartSyncPayload,
+const checkoutCart = createAsyncThunk<
+  OrderResponse,
+  CartCheckoutPayload,
   { rejectValue: ApiError }
->("cart/syncCart", async (payload, { rejectWithValue }) => {
+>("cart/checkout", async (payload, { rejectWithValue }) => {
   try {
-    await CartService.syncCart(payload);
+    const response = await CartService.checkoutCart(payload);
 
-    return payload;
+    return response.data;
   } catch (error) {
     const err = error as AxiosError<ApiError>;
 
     return rejectWithValue(
-      err.response?.data || { message: "Cart sync error" },
+      err.response?.data || { message: "Cart checkout error" },
     );
   }
 });
 
-export { fetchCart, syncCart };
+export { checkoutCart };

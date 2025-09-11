@@ -11,6 +11,8 @@ import { Checkout } from "@/components/cart/Checkout";
 
 import { checkoutCart } from "@/store/redux/cartThunks";
 
+import { getLocaldate } from "@/utils/date/getLocalDate";
+
 const ShoppingCartPage = () => {
   const dispatch = useAppDispatch();
 
@@ -23,6 +25,7 @@ const ShoppingCartPage = () => {
         productId: item.id,
         quantity: item.quantity,
       })),
+      orderDate: getLocaldate(),
     };
 
     dispatch(checkoutCart(payload));

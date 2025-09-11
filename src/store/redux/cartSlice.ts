@@ -88,10 +88,12 @@ const cartSlice = createSlice({
         state.isLoading = false;
         state.items = [];
         state.lastOrderNumber = action.payload.orderNumber;
+
+        saveCartToLocalStorage(state.items);
       })
       .addCase(checkoutCart.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload?.message || "Checkout failed";
+        state.error = action.payload?.message ?? null;
       });
   },
 });

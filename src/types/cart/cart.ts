@@ -33,6 +33,7 @@ type CartCheckoutPayload = {
   phoneNumber: string;
   address: string;
   cart: { productId: string; quantity: number }[];
+  orderDate: string;
 };
 
 type OrderResponse = {

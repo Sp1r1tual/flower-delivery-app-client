@@ -21,27 +21,47 @@ const fetchCategories = createAsyncThunk<
     return response.data.map(mapBackendCategoryToCategory);
   } catch (error) {
     const err = error as AxiosError<ApiError>;
+
     return rejectWithValue(
       err.response?.data || { message: "Error loading categories" },
     );
   }
 });
 
-const fetchProducts = createAsyncThunk<
+const fetchAllProducts = createAsyncThunk<
   ShopType[],
-  string | undefined,
+  void,
   { rejectValue: ApiError }
->("shop/fetchProducts", async (categoryId, { rejectWithValue }) => {
+>("shop/fetchAllProducts", async (_, { rejectWithValue }) => {
   try {
-    const response = await ShopService.getShop(categoryId);
+    const response = await ShopService.getAllProducts();
 
     return response.data.map(mapBackendProductToShopType);
   } catch (error) {
     const err = error as AxiosError<ApiError>;
+
     return rejectWithValue(
       err.response?.data || { message: "Error loading products" },
     );
   }
 });
 
-export { fetchProducts, fetchCategories };
+const fetchProductsByCategory = createAsyncThunk<
+  ShopType[],
+  string,
+  { rejectValue: ApiError }
+>("shop/fetchProductsByCategory", async (categoryId, { rejectWithValue }) => {
+  try {
+    const response = await ShopService.getProductsByCategory(categoryId);
+
+    return response.data.map(mapBackendProductToShopType);
+  } catch (error) {
+    const err = error as AxiosError<ApiError>;
+
+    return rejectWithValue(
+      err.response?.data || { message: "Error loading products" },
+    );
+  }
+});
+
+export { fetchAllProducts, fetchProductsByCategory, fetchCategories };

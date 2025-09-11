@@ -7,7 +7,7 @@ import { CategoriesListProps } from "@/types";
 import { CategoriesItem } from "./CategoriesItem";
 
 import { setSelectedCategory } from "@/store/redux/shopSlice";
-import { fetchProducts } from "@/store/redux/shopThunks";
+import { fetchProductsByCategory } from "@/store/redux/shopThunks";
 
 import styles from "./styles/CategoriesList.module.css";
 
@@ -24,7 +24,7 @@ const CategoriesList = ({ categoryNames }: CategoriesListProps) => {
 
   const handleSelectCategory = (categoryId: string) => {
     dispatch(setSelectedCategory(categoryId));
-    dispatch(fetchProducts(categoryId));
+    dispatch(fetchProductsByCategory(categoryId));
   };
 
   return (

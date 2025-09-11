@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { ShopType, Category } from "@/types";
 
-import { fetchProducts, fetchCategories } from "./shopThunks";
+import {
+  fetchAllProducts,
+  fetchProductsByCategory,
+  fetchCategories,
+} from "./shopThunks";
 
 interface IShopState {
   products: ShopType[];
@@ -29,18 +33,35 @@ const shopSlice = createSlice({
     setSelectedCategory(state, action: PayloadAction<string | undefined>) {
       state.selectedCategoryId = action.payload;
     },
+    clearError(state) {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProducts.pending, (state) => {
+      .addCase(fetchAllProducts.pending, (state) => {
         state.isProductsLoading = true;
         state.error = null;
       })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
+      .addCase(fetchAllProducts.fulfilled, (state, action) => {
+        state.isProductsLoading = false;
+        state.products = action.payload;
+        state.selectedCategoryId = undefined;
+      })
+      .addCase(fetchAllProducts.rejected, (state, action) => {
+        state.isProductsLoading = false;
+        state.error = action.payload?.message ?? null;
+      })
+
+      .addCase(fetchProductsByCategory.pending, (state) => {
+        state.isProductsLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
         state.isProductsLoading = false;
         state.products = action.payload;
       })
-      .addCase(fetchProducts.rejected, (state, action) => {
+      .addCase(fetchProductsByCategory.rejected, (state, action) => {
         state.isProductsLoading = false;
         state.error = action.payload?.message ?? null;
       })
@@ -60,5 +81,5 @@ const shopSlice = createSlice({
   },
 });
 
-export const { setSelectedCategory } = shopSlice.actions;
+export const { setSelectedCategory, clearError } = shopSlice.actions;
 export default shopSlice.reducer;

@@ -5,20 +5,26 @@ import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
 import { DotsLoader } from "../ui/loaders/DotsLoader";
 import { ShopList } from "./ShopList";
 
-import { fetchProducts } from "@/store/redux/shopThunks";
+import { fetchAllProducts } from "@/store/redux/shopThunks";
 
 import styles from "./styles/ShopView.module.css";
 
 const ShopView = () => {
   const dispatch = useAppDispatch();
 
-  const { products, isProductsLoading } = useAppSelector((state) => state.shop);
+  const { products, isProductsLoading, selectedCategoryId } = useAppSelector(
+    (state) => state.shop,
+  );
 
   useEffect(() => {
-    if (!products || products.length === 0) {
-      dispatch(fetchProducts());
+    if (
+      products.length === 0 &&
+      selectedCategoryId === undefined &&
+      !isProductsLoading
+    ) {
+      dispatch(fetchAllProducts());
     }
-  }, [dispatch, products]);
+  }, [dispatch, products.length, selectedCategoryId, isProductsLoading]);
 
   return (
     <div className={styles.shop}>

@@ -7,10 +7,12 @@ class ShopService {
     return $api.get<BackendCategory[]>("/categories");
   }
 
-  static getShop(categoryId?: string) {
-    const url = categoryId ? `/shop?category=${categoryId}` : "/shop";
+  static getAllProducts() {
+    return $api.get<BackendProduct[]>("/shop");
+  }
 
-    return $api.get<BackendProduct[]>(url);
+  static getProductsByCategory(categoryId: string) {
+    return $api.get<BackendProduct[]>(`/shop/category/${categoryId}`);
   }
 }
 

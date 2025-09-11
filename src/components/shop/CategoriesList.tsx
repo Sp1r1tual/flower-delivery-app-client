@@ -7,7 +7,10 @@ import { CategoriesListProps } from "@/types";
 import { CategoriesItem } from "./CategoriesItem";
 
 import { setSelectedCategory } from "@/store/redux/shopSlice";
-import { fetchProductsByCategory } from "@/store/redux/shopThunks";
+import {
+  fetchProductsByCategory,
+  fetchAllProducts,
+} from "@/store/redux/shopThunks";
 
 import styles from "./styles/CategoriesList.module.css";
 
@@ -33,7 +36,16 @@ const CategoriesList = ({ categoryNames }: CategoriesListProps) => {
         {isOpen ? "Hide shops" : "Show shops"}
       </button>
 
-      <div className={`${styles.list} ${isOpen ? styles.open : ""}`}>
+      <div className={styles.list}>
+        {categoryNames.length > 0 && (
+          <CategoriesItem
+            key="all"
+            text="All Shops"
+            onClick={() => dispatch(fetchAllProducts())}
+            isSelected={selectedCategoryId === undefined}
+          />
+        )}
+
         {categoryNames.map((category) => (
           <CategoriesItem
             key={category.id}

@@ -35,6 +35,27 @@
   margin-top: auto;
 }
 
+.buttonsWrapper {
+  position: relative;
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.addToCartWrapper {
+  z-index: 1;
+}
+
+.favoriteBtnWrapper {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 @media (max-width: 992px) {
   .image {
     width: 12rem;

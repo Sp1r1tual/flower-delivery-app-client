@@ -1,0 +1,25 @@
+.favoriteBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoriteBtn img {
+  width: 1.5rem;
+  height: 1.5rem;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.favoriteBtn:hover img {
+  transform: scale(1.2);
+}

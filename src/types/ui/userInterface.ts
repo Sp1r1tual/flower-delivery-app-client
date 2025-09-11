@@ -64,6 +64,11 @@ type ApiError = {
   message: string;
 };
 
+type AddToFavoriteProps = {
+  isFavorite: boolean;
+  onToggle: () => void;
+};
+
 export type {
   ContainerProps,
   RowProps,
@@ -74,5 +79,6 @@ export type {
   CheckoutProps,
   ToastProps,
   CenterWrapperProps,
+  AddToFavoriteProps,
   ApiError,
 };

@@ -8,8 +8,10 @@ type ShopType = {
   id: string;
   name: string;
   price: number;
-  createdAt?: string;
   imageUrl: string;
+  isFavorite: boolean;
+  createdAt: string;
+  onToggleFavorite: (id: string) => void;
 };
 
 type ShopItemProps = {
@@ -17,6 +19,8 @@ type ShopItemProps = {
   name: string;
   price: number;
   imageUrl: string;
+  isFavorite: boolean;
+  onToggleFavorite: (id: string) => void;
 };
 
 type ShopListProps = {

@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ShopType } from "@/types";
+import { ShopType, Category } from "@/types";
 
 import { fetchProducts, fetchCategories } from "./shopThunks";
 
 interface IShopState {
   products: ShopType[];
-  categories: string[];
+  categories: Category[];
   isLoading: boolean;
   error: string | null;
 }
@@ -46,7 +46,7 @@ const shopSlice = createSlice({
       })
       .addCase(
         fetchCategories.fulfilled,
-        (state, action: PayloadAction<string[]>) => {
+        (state, action: PayloadAction<Category[]>) => {
           state.isLoading = false;
           state.categories = action.payload;
         },

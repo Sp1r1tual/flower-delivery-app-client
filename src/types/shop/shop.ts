@@ -1,5 +1,7 @@
+type Category = { _id: string; name: string };
+
 type CategoriesListProps = {
-  categoryNames: string[];
+  categoryNames: Category[];
 };
 
 type CategoriesItemProps = {
@@ -33,6 +35,7 @@ type SortProps = {
 type SortKey = "byPrice" | "byDate";
 
 export type {
+  Category,
   CategoriesListProps,
   CategoriesItemProps,
   ShopItemProps,

@@ -18,8 +18,8 @@ const CategoriesList = ({ categoryNames }: CategoriesListProps) => {
       </button>
 
       <div className={`${styles.list} ${isOpen ? styles.open : ""}`}>
-        {categoryNames.map((name) => (
-          <CategoriesItem key={name} text={name} />
+        {categoryNames.map((category) => (
+          <CategoriesItem key={category._id} text={category.name} />
         ))}
       </div>
     </>

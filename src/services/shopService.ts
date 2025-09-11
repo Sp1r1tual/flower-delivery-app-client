@@ -1,14 +1,16 @@
 import { $api } from "@/api";
 
-import { ShopType } from "@/types";
+import { ShopType, Category } from "@/types";
 
 class ShopService {
-  static getShop() {
-    return $api.get<ShopType[]>("/shop");
+  static getCategories() {
+    return $api.get<Category[]>("/categories");
   }
 
-  static getCategories() {
-    return $api.get<string[]>("/categories");
+  static getShop(categoryId?: string) {
+    const url = categoryId ? `/shop?category=${categoryId}` : "/shop";
+
+    return $api.get<ShopType[]>(url);
   }
 }
 

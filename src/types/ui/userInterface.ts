@@ -50,6 +50,12 @@ type CheckoutProps = {
   disabled?: boolean;
 };
 
+type ToastProps = {
+  text: string;
+  duration?: number;
+  onClose: () => void;
+};
+
 type ApiError = {
   message: string;
 };
@@ -62,5 +68,6 @@ export type {
   CounterProps,
   BtnProps,
   CheckoutProps,
+  ToastProps,
   ApiError,
 };

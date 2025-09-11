@@ -5,6 +5,11 @@ import { ShopType, Category, ApiError } from "@/types";
 
 import { ShopService } from "@/services/shopService";
 
+import {
+  mapBackendCategoryToCategory,
+  mapBackendProductToShopType,
+} from "@/utils/mappers/mapTypesShop";
+
 const fetchCategories = createAsyncThunk<
   Category[],
   void,
@@ -13,10 +18,9 @@ const fetchCategories = createAsyncThunk<
   try {
     const response = await ShopService.getCategories();
 
-    return response.data;
+    return response.data.map(mapBackendCategoryToCategory);
   } catch (error) {
     const err = error as AxiosError<ApiError>;
-
     return rejectWithValue(
       err.response?.data || { message: "Error loading categories" },
     );
@@ -31,10 +35,9 @@ const fetchProducts = createAsyncThunk<
   try {
     const response = await ShopService.getShop(categoryId);
 
-    return response.data;
+    return response.data.map(mapBackendProductToShopType);
   } catch (error) {
     const err = error as AxiosError<ApiError>;
-
     return rejectWithValue(
       err.response?.data || { message: "Error loading products" },
     );

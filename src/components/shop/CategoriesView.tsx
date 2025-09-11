@@ -12,7 +12,9 @@ import styles from "./styles/CategoriesView.module.css";
 const CategoriesView = () => {
   const dispatch = useAppDispatch();
 
-  const { categories, isLoading } = useAppSelector((state) => state.shop);
+  const { categories, isCategoriesLoading } = useAppSelector(
+    (state) => state.shop,
+  );
 
   useEffect(() => {
     if (!categories || categories.length === 0) {
@@ -22,7 +24,7 @@ const CategoriesView = () => {
 
   return (
     <div className={styles.shops}>
-      {isLoading ? (
+      {isCategoriesLoading ? (
         <DotsLoader />
       ) : categories.length === 0 ? (
         <p className={styles.emptyMessage}>No categories available</p>

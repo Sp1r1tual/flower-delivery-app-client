@@ -7,55 +7,58 @@ import { fetchProducts, fetchCategories } from "./shopThunks";
 interface IShopState {
   products: ShopType[];
   categories: Category[];
-  isLoading: boolean;
+  selectedCategoryId?: string | undefined;
+  isProductsLoading: boolean;
+  isCategoriesLoading: boolean;
   error: string | null;
 }
 
 const initialState: IShopState = {
   products: [],
   categories: [],
-  isLoading: false,
+  selectedCategoryId: undefined,
+  isProductsLoading: false,
+  isCategoriesLoading: false,
   error: null,
 };
 
 const shopSlice = createSlice({
   name: "shop",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedCategory(state, action: PayloadAction<string | undefined>) {
+      state.selectedCategoryId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchProducts.pending, (state) => {
-        state.isLoading = true;
+        state.isProductsLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchProducts.fulfilled,
-        (state, action: PayloadAction<ShopType[]>) => {
-          state.isLoading = false;
-          state.products = action.payload;
-        },
-      )
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.isProductsLoading = false;
+        state.products = action.payload;
+      })
       .addCase(fetchProducts.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isProductsLoading = false;
         state.error = action.payload?.message ?? null;
       })
 
       .addCase(fetchCategories.pending, (state) => {
-        state.isLoading = true;
+        state.isCategoriesLoading = true;
         state.error = null;
       })
-      .addCase(
-        fetchCategories.fulfilled,
-        (state, action: PayloadAction<Category[]>) => {
-          state.isLoading = false;
-          state.categories = action.payload;
-        },
-      )
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.isCategoriesLoading = false;
+        state.categories = action.payload;
+      })
       .addCase(fetchCategories.rejected, (state, action) => {
-        state.isLoading = false;
+        state.isCategoriesLoading = false;
         state.error = action.payload?.message ?? null;
       });
   },
 });
 
+export const { setSelectedCategory } = shopSlice.actions;
 export default shopSlice.reducer;

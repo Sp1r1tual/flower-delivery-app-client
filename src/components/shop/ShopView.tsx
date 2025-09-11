@@ -12,7 +12,7 @@ import styles from "./styles/ShopView.module.css";
 const ShopView = () => {
   const dispatch = useAppDispatch();
 
-  const { products, isLoading } = useAppSelector((state) => state.shop);
+  const { products, isProductsLoading } = useAppSelector((state) => state.shop);
 
   useEffect(() => {
     if (!products || products.length === 0) {
@@ -22,7 +22,7 @@ const ShopView = () => {
 
   return (
     <div className={styles.shop}>
-      {isLoading ? (
+      {isProductsLoading ? (
         <DotsLoader />
       ) : products.length === 0 ? (
         <p className={styles.emptyMessage}>No products available</p>

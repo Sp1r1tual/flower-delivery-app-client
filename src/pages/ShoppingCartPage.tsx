@@ -1,5 +1,6 @@
 import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
 
+import { CenterWrapper } from "@/components/ui/wrappers/CenterWrapper";
 import { Row } from "@/components/ui/wrappers/Row";
 import { Container } from "@/components/ui/wrappers/Container";
 import { OrderForm } from "@/components/cart/OrderForm";
@@ -20,22 +21,24 @@ const ShoppingCartPage = () => {
   };
 
   return (
-    <>
-      <Row>
-        <Container>
-          <OrderForm onSubmit={handleSubmit} />
-        </Container>
-        <Container>
-          <CartView />
-        </Container>
-      </Row>
+    <CenterWrapper>
+      <Container showBorder={false}>
+        <Row>
+          <Container>
+            <OrderForm onSubmit={handleSubmit} />
+          </Container>
+          <Container>
+            <CartView />
+          </Container>
+        </Row>
 
-      <Checkout
-        loading={isLoading}
-        items={items}
-        disabled={items.length === 0}
-      />
-    </>
+        <Checkout
+          loading={isLoading}
+          items={items}
+          disabled={items.length === 0}
+        />
+      </Container>
+    </CenterWrapper>
   );
 };
 

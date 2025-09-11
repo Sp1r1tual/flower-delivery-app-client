@@ -1,8 +1,8 @@
 .shop {
+  width: 70rem;
   padding: 0 0.5rem;
-  min-width: 20rem;
-  min-height: 60vh;
-  margin: 1rem 0;
+  height: 70vh;
+  margin: 1rem auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,4 +15,12 @@
   color: #777;
   margin-top: 1rem;
   text-align: center;
+}
+
+@media (max-width: 576px) {
+  .shop {
+    width: 20rem;
+    padding: 0.5rem;
+    height: auto;
+  }
 }

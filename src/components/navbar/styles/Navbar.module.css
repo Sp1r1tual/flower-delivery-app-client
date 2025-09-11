@@ -34,6 +34,7 @@
 
 .navButtons a.active {
   color: #0070f3;
+  font-weight: 600;
 }
 
 .navButtons a:hover {

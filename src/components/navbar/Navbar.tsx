@@ -30,11 +30,19 @@ const Navbar = () => {
     <nav className={styles.navbar}>
       <div className={styles.navButtons}>
         <div className={styles.desktopMenu}>
-          <NavLink to="/" onClick={closeMenu}>
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? styles.active : "")}
+            onClick={closeMenu}
+          >
             Shop
           </NavLink>
 
-          <NavLink to="/cart" onClick={closeMenu}>
+          <NavLink
+            to="/cart"
+            className={({ isActive }) => (isActive ? styles.active : "")}
+            onClick={closeMenu}
+          >
             Shopping Cart
           </NavLink>
         </div>
@@ -45,11 +53,19 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className={styles.dropdownMenu}>
-            <NavLink to="/" onClick={closeMenu}>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={closeMenu}
+            >
               Shop
             </NavLink>
 
-            <NavLink to="/cart" onClick={closeMenu}>
+            <NavLink
+              to="/cart"
+              className={({ isActive }) => (isActive ? styles.active : "")}
+              onClick={closeMenu}
+            >
               Shopping Cart
             </NavLink>
           </div>

@@ -1,12 +1,11 @@
 .shops {
+  width: 20rem;
+  padding: 0 0.5rem;
+  height: 70vh;
+  margin: 1rem auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-width: 20rem;
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   text-align: center;
 }
@@ -23,4 +22,11 @@
   color: #777;
   margin-top: 1rem;
   text-align: center;
+}
+
+@media (max-width: 576px) {
+  .shops {
+    padding: 0.5rem;
+    height: auto;
+  }
 }

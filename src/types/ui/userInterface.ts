@@ -56,6 +56,10 @@ type ToastProps = {
   onClose: () => void;
 };
 
+type CenterWrapperProps = {
+  children: React.ReactNode;
+};
+
 type ApiError = {
   message: string;
 };
@@ -69,5 +73,6 @@ export type {
   BtnProps,
   CheckoutProps,
   ToastProps,
+  CenterWrapperProps,
   ApiError,
 };

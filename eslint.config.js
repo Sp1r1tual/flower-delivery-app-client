@@ -53,7 +53,6 @@ export default defineConfig([
       ],
       "prefer-const": "error",
       "no-duplicate-imports": "error",
-      "no-console": "warn",
       "no-unused-vars": "off",
       "prettier/prettier": "error",
     },

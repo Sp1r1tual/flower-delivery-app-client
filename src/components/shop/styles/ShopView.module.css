@@ -1,0 +1,26 @@
+.shop {
+  width: 70rem;
+  padding: 0 0.5rem;
+  height: 70vh;
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.emptyMessage {
+  font-size: 1rem;
+  color: #777;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+  .shop {
+    width: 20rem;
+    padding: 0.5rem;
+    height: auto;
+  }
+}

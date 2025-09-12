@@ -1,0 +1,14 @@
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  max-width: fit-content;
+  margin-left: auto;
+}
+
+.amount {
+  font-weight: 600;
+}

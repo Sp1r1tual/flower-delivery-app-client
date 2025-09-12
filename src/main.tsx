@@ -1,7 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
 
-import { App } from "./App.js";
+import { Router } from "./Router.tsx";
+import { store } from "./store/store.ts";
 
 import "./index.css";
 
@@ -11,6 +14,8 @@ if (!rootElement) throw new Error("Root element not found");
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <Provider store={store}>
+      <RouterProvider router={Router} />
+    </Provider>
   </StrictMode>,
 );

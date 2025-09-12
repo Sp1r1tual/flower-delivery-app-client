@@ -1,12 +1,59 @@
-# React + Vite
+# 🌸 Flower Delivery App (Client)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **client-side application** for a flower delivery service, implemented as a **middle-level test task for ELIFTECH**.  
+The project is built with **React**, **TypeScript**, and **Vite**, following modern best practices such as state management with **Redux Toolkit**, form handling with **React Hook Form**, and clean code quality ensured by **ESLint** and **Prettier**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 📦 Product catalog browsing
+- 🛒 Shopping cart functionality
+- 🧾 Order creation
+- 🔄 State management with **Redux Toolkit**
+- ✅ Form validation with **React Hook Form**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🛠 Tech Stack
+
+- **Frontend Framework:** React 19
+- **Language:** TypeScript
+- **Routing:** React Router v7
+- **State Management:** Redux Toolkit
+- **HTTP Client:** Axios
+- **Bundler:** Vite
+- **Code Quality:** ESLint + Prettier + Husky + lint-staged
+
+---
+
+## ⚙️ Scripts
+
+Run the following commands inside the project root:
+
+| Command              | Description                          |
+| -------------------- | ------------------------------------ |
+| `npm run dev`        | Start the development server         |
+| `npm run build`      | Build the project for production     |
+| `npm run preview`    | Preview the production build locally |
+| `npm run lint`       | Run ESLint with auto-fix             |
+| `npm run lint:check` | Run ESLint without auto-fix          |
+| `npm run type-check` | Run TypeScript type checking         |
+| `npm run format`     | Format code with Prettier            |
+
+---
+
+## 🏗 Installation & Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Sp1r1tual/flower-delivery-app-client
+```
+
+Install and run the app in development mode:
+
+```bash
+npm install           # installs client deps
+npm run dev           # starts client
+```

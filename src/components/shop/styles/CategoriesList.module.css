@@ -1,0 +1,38 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.toggleButton {
+  display: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #000;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  width: 90%;
+}
+
+.toggleButton:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 576px) {
+  .toggleButton {
+    display: block;
+  }
+
+  .list {
+    display: none;
+  }
+
+  .list.open {
+    display: flex;
+  }
+}

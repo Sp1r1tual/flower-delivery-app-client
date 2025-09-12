@@ -19,13 +19,15 @@ type OrderProduct = {
   imageUrl: string;
 };
 
-type OrderItem = {
-  id: string;
+type OrderItemBackend = {
+  _id: string;
   name: string;
   quantity: number;
   price: number;
   product: OrderProduct;
 };
+
+type OrderItem = OrderItemBackend & { id: string };
 
 type OrderResponse = {
   items: OrderItem[];
@@ -49,6 +51,7 @@ export type {
   OrderFormData,
   OrderType,
   OrderProduct,
+  OrderItemBackend,
   OrderItem,
   OrderResponse,
   OrderListProps,

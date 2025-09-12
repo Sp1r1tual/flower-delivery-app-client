@@ -4,6 +4,7 @@ import { App } from "./App";
 import { PageLayout } from "./layouts/PageLayout";
 import { ShopPage } from "./pages/ShopPage";
 import { ShoppingCartPage } from "./pages/ShoppingCartPage";
+import { OrderDetailsPage } from "./pages/OrderDetailsPage";
 
 const Router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const Router = createBrowserRouter([
             element: <ShoppingCartPage />,
           },
         ],
+      },
+      {
+        path: "/order/:orderNumber",
+        element: <OrderDetailsPage />,
       },
     ],
   },

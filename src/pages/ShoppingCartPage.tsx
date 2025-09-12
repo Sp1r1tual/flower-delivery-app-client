@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
 
 import { OrderFormData, CartCheckoutPayload } from "@/types";
@@ -11,24 +13,28 @@ import { Checkout } from "@/components/cart/Checkout";
 
 import { checkoutCart } from "@/store/redux/cartThunks";
 
-import { getLocaldate } from "@/utils/date/getLocalDate";
-
 const ShoppingCartPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const { items, isLoading } = useAppSelector((state) => state.cart);
 
-  const handleSubmit = (formData: OrderFormData) => {
+  const handleSubmit = async (formData: OrderFormData) => {
     const payload: CartCheckoutPayload = {
       ...formData,
       cart: items.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
       })),
-      orderDate: getLocaldate(),
     };
 
-    dispatch(checkoutCart(payload));
+    const resultAction = await dispatch(checkoutCart(payload));
+
+    if (checkoutCart.fulfilled.match(resultAction)) {
+      const orderNumber = resultAction.payload.orderNumber;
+
+      navigate(`/order/${orderNumber}`);
+    }
   };
 
   return (

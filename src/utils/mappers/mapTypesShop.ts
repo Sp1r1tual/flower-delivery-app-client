@@ -11,6 +11,8 @@ const mapBackendProductToShopType = (item: BackendProduct): ShopType => ({
   price: item.price,
   imageUrl: item.imageUrl,
   createdAt: item.createdAt ?? "",
+  isFavorite: false,
+  onToggleFavorite: () => {},
 });
 
 export { mapBackendCategoryToCategory, mapBackendProductToShopType };

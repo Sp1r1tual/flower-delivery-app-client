@@ -1,0 +1,27 @@
+.orderItem {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 0.5rem;
+  gap: 1rem;
+}
+
+.orderIcons {
+  width: 5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.itemName {
+  flex: 1;
+  text-align: left;
+}
+
+.quantity {
+  font-weight: bold;
+  text-align: center;
+  min-width: 5rem;
+  padding-right: 1rem;
+}

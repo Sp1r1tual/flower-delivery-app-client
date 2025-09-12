@@ -8,7 +8,7 @@ const OrderList = ({ order }: OrderListProps) => {
   return (
     <div className={styles.orderList}>
       {order.items.map((item) => (
-        <OrderItem key={item._id} item={item} />
+        <OrderItem key={item.id} item={item} />
       ))}
     </div>
   );

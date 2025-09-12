@@ -20,7 +20,7 @@ type OrderProduct = {
 };
 
 type OrderItem = {
-  _id: string;
+  id: string;
   name: string;
   quantity: number;
   price: number;

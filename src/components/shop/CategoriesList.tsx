@@ -36,7 +36,7 @@ const CategoriesList = ({ categoryNames }: CategoriesListProps) => {
         {isOpen ? "Hide shops" : "Show shops"}
       </button>
 
-      <div className={styles.list}>
+      <div className={`${styles.list} ${isOpen ? styles.open : ""}`}>
         {categoryNames.length > 0 && (
           <CategoriesItem
             key="all"

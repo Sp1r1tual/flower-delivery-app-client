@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { SortKey } from "@/types";
+import { SortKeyType } from "@/types";
 
 interface SortState {
-  sort: SortKey;
+  sort: SortKeyType;
 }
 
 const initialState: SortState = {
@@ -14,7 +14,7 @@ const sortShopSlice = createSlice({
   name: "sort",
   initialState,
   reducers: {
-    setSort(state, action: PayloadAction<SortKey>) {
+    setSort(state, action: PayloadAction<SortKeyType>) {
       state.sort = action.payload;
     },
   },

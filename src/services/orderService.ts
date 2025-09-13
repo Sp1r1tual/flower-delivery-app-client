@@ -1,10 +1,10 @@
 import { $api } from "@/api";
 
-import { OrderResponse } from "@/types";
+import { IOrderResponse } from "@/types";
 
 class OrderService {
   static getOrderByOrderNumber(orderNumber: string) {
-    return $api.get<OrderResponse>(`/order/${orderNumber}`);
+    return $api.get<IOrderResponse>(`/order/${orderNumber}`);
   }
 }
 

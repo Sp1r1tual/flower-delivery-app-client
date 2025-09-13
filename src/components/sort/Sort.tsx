@@ -1,8 +1,11 @@
-import { SortProps } from "@/types";
-
 import styles from "./styles/Sort.module.css";
 
-const Sort = ({ sort, onChange }: SortProps) => {
+interface ISortProps {
+  sort: "byPrice" | "byDate";
+  onChange: (value: "byPrice" | "byDate") => void;
+}
+
+const Sort = ({ sort, onChange }: ISortProps) => {
   return (
     <div className={styles.sort}>
       <button

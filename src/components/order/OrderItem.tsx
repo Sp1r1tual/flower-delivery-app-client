@@ -1,8 +1,12 @@
-import { OrderItemProps } from "@/types";
+import { OrderItemType } from "@/types";
 
 import styles from "./styles/OrderItem.module.css";
 
-const OrderItem = ({ item }: OrderItemProps) => {
+interface IOrderItemProps {
+  item: OrderItemType;
+}
+
+const OrderItem = ({ item }: IOrderItemProps) => {
   return (
     <div className={styles.orderItem}>
       <img

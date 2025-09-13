@@ -1,0 +1,9 @@
+.sidebar {
+  max-width: 20rem;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    max-width: 100%;
+  }
+}

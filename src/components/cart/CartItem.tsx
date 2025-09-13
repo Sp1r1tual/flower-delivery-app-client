@@ -1,6 +1,6 @@
-import { useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppDispatch } from "@/types/reduxHooks";
 
-import { CartType } from "@/types";
+import { ICart } from "@/types";
 
 import { Counter } from "../ui/counters/Counter";
 
@@ -12,7 +12,7 @@ import {
 
 import styles from "./styles/CartItem.module.css";
 
-const CartItem = ({ id, name, price, quantity, imageUrl }: CartType) => {
+const CartItem = ({ id, name, price, quantity, imageUrl }: ICart) => {
   const dispatch = useAppDispatch();
 
   const handleIncrease = () => {

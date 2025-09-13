@@ -1,18 +1,18 @@
 import { $api } from "@/api";
 
-import { BackendCategory, BackendProduct } from "@/types";
+import { IBackendCategory, IBackendProduct } from "@/types";
 
 class ShopService {
   static getCategories() {
-    return $api.get<BackendCategory[]>("/categories");
+    return $api.get<IBackendCategory[]>("/categories");
   }
 
   static getAllProducts() {
-    return $api.get<BackendProduct[]>("/shop");
+    return $api.get<IBackendProduct[]>("/shop");
   }
 
   static getProductsByCategory(categoryId: string) {
-    return $api.get<BackendProduct[]>(`/shop/category/${categoryId}`);
+    return $api.get<IBackendProduct[]>(`/shop/category/${categoryId}`);
   }
 }
 

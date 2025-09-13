@@ -1,9 +1,9 @@
-import { OrderResponse, OrderItem } from "@/types";
+import { IOrderResponse, OrderItemType } from "@/types";
 
-const mapBackendOrderItems = (order: OrderResponse): OrderResponse => {
+const mapBackendOrderItems = (order: IOrderResponse): IOrderResponse => {
   return {
     ...order,
-    items: order.items.map((item: OrderItem) => ({
+    items: order.items.map((item: OrderItemType) => ({
       ...item,
       id: item._id,
     })),

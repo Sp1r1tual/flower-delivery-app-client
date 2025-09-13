@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 import { useSortedShops } from "@/hooks/shop/useSortedShop";
 
-import { ShopListProps, SortKey } from "@/types";
+import { IShop, SortKeyType } from "@/types";
 
 import { ShopItem } from "./ShopItem";
 import { Sort } from "../sort/Sort";
@@ -14,7 +14,11 @@ import { localFavoriteShop } from "@/utils/state/localFavoriteShop";
 
 import styles from "./styles/ShopList.module.css";
 
-const ShopList = ({ shops }: ShopListProps) => {
+interface IShopListProps {
+  shops: IShop[];
+}
+
+const ShopList = ({ shops }: IShopListProps) => {
   const dispatch = useAppDispatch();
 
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() =>
@@ -25,7 +29,7 @@ const ShopList = ({ shops }: ShopListProps) => {
 
   const sortedItems = useSortedShops(shops, sort, favoriteIds);
 
-  const handleSortChange = (newSort: SortKey) => {
+  const handleSortChange = (newSort: SortKeyType) => {
     dispatch(setSort(newSort));
   };
 

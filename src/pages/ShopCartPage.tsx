@@ -1,26 +1,26 @@
 import { useNavigate } from "react-router-dom";
 
-import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
-import { OrderFormData, CartCheckoutPayload } from "@/types";
+import { IOrderFormData, ICartCheckoutPayload } from "@/types";
 
-import { CenterWrapper } from "@/components/ui/wrappers/CenterWrapper";
-import { Row } from "@/components/ui/wrappers/Row";
-import { Container } from "@/components/ui/wrappers/Container";
+import { Sidebar } from "@/components/ui/wrappers/Sidebar";
 import { OrderForm } from "@/components/cart/OrderForm";
 import { CartView } from "@/components/cart/CartView";
 import { Checkout } from "@/components/cart/Checkout";
 
 import { checkoutCart } from "@/store/redux/cartThunks";
+import { ContentWrapper } from "@/components/ui/wrappers/ContentWrapper";
+import { Row } from "@/components/ui/wrappers/Row";
 
-const ShoppingCartPage = () => {
+const ShopCartPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const { items, isLoading } = useAppSelector((state) => state.cart);
 
-  const handleSubmit = async (formData: OrderFormData) => {
-    const payload: CartCheckoutPayload = {
+  const handleSubmit = async (formData: IOrderFormData) => {
+    const payload: ICartCheckoutPayload = {
       ...formData,
       cart: items.map((item) => ({
         productId: item.id,
@@ -32,31 +32,28 @@ const ShoppingCartPage = () => {
 
     if (checkoutCart.fulfilled.match(resultAction)) {
       const orderNumber = resultAction.payload.orderNumber;
-
       navigate(`/order/${orderNumber}`);
     }
   };
 
   return (
-    <CenterWrapper>
-      <Container showBorder={false}>
-        <Row>
-          <Container>
-            <OrderForm onSubmit={handleSubmit} />
-          </Container>
-          <Container>
-            <CartView />
-          </Container>
-        </Row>
+    <>
+      <ContentWrapper>
+        <Sidebar>
+          <OrderForm onSubmit={handleSubmit} />
+        </Sidebar>
+        <CartView />
+      </ContentWrapper>
 
+      <Row>
         <Checkout
           loading={isLoading}
           items={items}
           disabled={items.length === 0}
         />
-      </Container>
-    </CenterWrapper>
+      </Row>
+    </>
   );
 };
 
-export { ShoppingCartPage };
+export { ShopCartPage };

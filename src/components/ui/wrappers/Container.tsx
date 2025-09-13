@@ -1,12 +1,16 @@
-import { ContainerProps } from "@/types";
-
 import styles from "./styles/Container.module.css";
+
+interface IContainerProps {
+  children: React.ReactNode;
+  position?: "left" | "center" | "right";
+  showBorder?: boolean;
+}
 
 const Container = ({
   children,
   position = "center",
   showBorder = true,
-}: ContainerProps) => {
+}: IContainerProps) => {
   return (
     <div
       className={`${styles.container} ${styles[position]} ${!showBorder ? styles.noBorder : ""}`}

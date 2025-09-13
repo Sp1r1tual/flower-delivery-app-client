@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/types/redux/reduxHooks";
+import { useAppSelector } from "@/types/reduxHooks";
 
 import { CartList } from "./CartList";
 

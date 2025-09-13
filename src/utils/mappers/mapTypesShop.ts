@@ -1,18 +1,16 @@
-import { ShopType, Category, BackendCategory, BackendProduct } from "@/types";
+import { IShop, ICategory, IBackendCategory, IBackendProduct } from "@/types";
 
-const mapBackendCategoryToCategory = (cat: BackendCategory): Category => ({
+const mapBackendCategoryToCategory = (cat: IBackendCategory): ICategory => ({
   id: cat._id,
   name: cat.name,
 });
 
-const mapBackendProductToShopType = (item: BackendProduct): ShopType => ({
+const mapBackendProductToShopType = (item: IBackendProduct): IShop => ({
   id: item._id,
   name: item.name,
   price: item.price,
   imageUrl: item.imageUrl,
   createdAt: item.createdAt ?? "",
-  isFavorite: false,
-  onToggleFavorite: () => {},
 });
 
 export { mapBackendCategoryToCategory, mapBackendProductToShopType };

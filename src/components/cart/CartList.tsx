@@ -1,8 +1,12 @@
-import { CartListProps } from "@/types";
+import { ICart } from "@/types";
 
 import { CartItem } from "./CartItem";
 
 import styles from "./styles/CartList.module.css";
+
+interface CartListProps {
+  cart: ICart[];
+}
 
 const CartList = ({ cart }: CartListProps) => {
   return (

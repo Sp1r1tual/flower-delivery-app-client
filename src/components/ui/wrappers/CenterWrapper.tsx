@@ -1,8 +1,10 @@
-import { CenterWrapperProps } from "@/types";
+interface ICenterWrapperProps {
+  children: React.ReactNode;
+}
 
 import styles from "./styles/CenterWrapper.module.css";
 
-const CenterWrapper = ({ children }: CenterWrapperProps) => {
+const CenterWrapper = ({ children }: ICenterWrapperProps) => {
   return <div className={styles.wrapper}>{children}</div>;
 };
 

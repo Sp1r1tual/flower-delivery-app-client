@@ -1,13 +1,15 @@
 .shops {
-  width: 20rem;
-  padding: 0 0.5rem;
-  height: 70vh;
-  margin: 1rem auto;
+  width: 100%;
+  padding: 1rem;
+  min-height: 70vh;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  border-radius: 0.5rem;
+  border: 1px solid #000000;
 }
 
 .header {
@@ -24,9 +26,17 @@
   text-align: center;
 }
 
+.loaderWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 576px) {
   .shops {
+    min-height: 10vh;
+    height: fit-content;
     padding: 0.5rem;
-    height: auto;
   }
 }

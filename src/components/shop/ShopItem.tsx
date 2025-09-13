@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppDispatch } from "@/types/reduxHooks";
 
-import { ShopItemProps, CartType } from "@/types";
+import { ICart } from "@/types";
 
 import { CommonBtn } from "../ui/buttons/CommonBtn";
 import { AddToFavorite } from "../ui/buttons/AddToFavorite";
@@ -12,6 +12,15 @@ import { addItem } from "@/store/redux/cartSlice";
 
 import styles from "./styles/ShopItem.module.css";
 
+interface IShopItemProps {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  isFavorite: boolean;
+  onToggleFavorite: (id: string) => void;
+}
+
 const ShopItem = ({
   id,
   name,
@@ -19,14 +28,14 @@ const ShopItem = ({
   imageUrl,
   isFavorite,
   onToggleFavorite,
-}: ShopItemProps) => {
+}: IShopItemProps) => {
   const dispatch = useAppDispatch();
 
   const [showToast, setShowToast] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleAddToCart = () => {
-    const item: CartType = { id, name, price, imageUrl, quantity: 1 };
+    const item: ICart = { id, name, price, imageUrl, quantity: 1 };
 
     dispatch(addItem(item));
     setShowToast(true);

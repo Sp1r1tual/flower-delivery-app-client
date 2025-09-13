@@ -1,18 +1,18 @@
-import { Row } from "@/components/ui/wrappers/Row";
-import { Container } from "@/components/ui/wrappers/Container";
+import { ContentWrapper } from "@/components/ui/wrappers/ContentWrapper";
+import { Sidebar } from "@/components/ui/wrappers/Sidebar";
 import { CategoriesView } from "@/components/shop/CategoriesView";
 import { ShopView } from "@/components/shop/ShopView";
 
 const ShopPage = () => {
   return (
-    <Row justify="center">
-      <Container>
-        <CategoriesView />
-      </Container>
-      <Container>
+    <>
+      <ContentWrapper>
+        <Sidebar>
+          <CategoriesView />
+        </Sidebar>
         <ShopView />
-      </Container>
-    </Row>
+      </ContentWrapper>
+    </>
   );
 };
 

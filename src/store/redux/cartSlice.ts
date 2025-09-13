@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { CartType } from "@/types";
+import { ICart } from "@/types";
 
 import { checkoutCart } from "@/store/redux/cartThunks";
 
@@ -10,7 +10,7 @@ import {
 } from "@/utils/state/localStorageCart";
 
 interface ICartState {
-  items: CartType[];
+  items: ICart[];
   isLoading: boolean;
   error: string | null;
   lastOrderNumber?: number;
@@ -26,7 +26,7 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<CartType>) => {
+    addItem: (state, action: PayloadAction<ICart>) => {
       const existing = state.items.find((i) => i.id === action.payload.id);
 
       if (!existing) {

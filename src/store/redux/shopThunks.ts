@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { ShopType, Category, ApiError } from "@/types";
+import { IShop, ICategory, IApiError } from "@/types";
 
 import { ShopService } from "@/services/shopService";
 
@@ -11,16 +11,16 @@ import {
 } from "@/utils/mappers/mapTypesShop";
 
 const fetchCategories = createAsyncThunk<
-  Category[],
+  ICategory[],
   void,
-  { rejectValue: ApiError }
+  { rejectValue: IApiError }
 >("shop/fetchCategories", async (_, { rejectWithValue }) => {
   try {
     const response = await ShopService.getCategories();
 
     return response.data.map(mapBackendCategoryToCategory);
   } catch (error) {
-    const err = error as AxiosError<ApiError>;
+    const err = error as AxiosError<IApiError>;
 
     return rejectWithValue(
       err.response?.data || { message: "Error loading categories" },
@@ -29,16 +29,16 @@ const fetchCategories = createAsyncThunk<
 });
 
 const fetchAllProducts = createAsyncThunk<
-  ShopType[],
+  IShop[],
   void,
-  { rejectValue: ApiError }
+  { rejectValue: IApiError }
 >("shop/fetchAllProducts", async (_, { rejectWithValue }) => {
   try {
     const response = await ShopService.getAllProducts();
 
     return response.data.map(mapBackendProductToShopType);
   } catch (error) {
-    const err = error as AxiosError<ApiError>;
+    const err = error as AxiosError<IApiError>;
 
     return rejectWithValue(
       err.response?.data || { message: "Error loading products" },
@@ -47,16 +47,16 @@ const fetchAllProducts = createAsyncThunk<
 });
 
 const fetchProductsByCategory = createAsyncThunk<
-  ShopType[],
+  IShop[],
   string,
-  { rejectValue: ApiError }
+  { rejectValue: IApiError }
 >("shop/fetchProductsByCategory", async (categoryId, { rejectWithValue }) => {
   try {
     const response = await ShopService.getProductsByCategory(categoryId);
 
     return response.data.map(mapBackendProductToShopType);
   } catch (error) {
-    const err = error as AxiosError<ApiError>;
+    const err = error as AxiosError<IApiError>;
 
     return rejectWithValue(
       err.response?.data || { message: "Error loading products" },

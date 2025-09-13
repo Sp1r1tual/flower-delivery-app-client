@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import { OrderResponse, ApiError } from "@/types";
+import { IOrderResponse, IApiError } from "@/types";
 
 import { OrderService } from "@/services/orderService";
 
@@ -15,7 +15,7 @@ import styles from "./styles/OrderView.module.css";
 
 const OrderView = () => {
   const { orderNumber } = useParams<{ orderNumber: string }>();
-  const [order, setOrder] = useState<OrderResponse | null>(null);
+  const [order, setOrder] = useState<IOrderResponse | null>(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -26,7 +26,7 @@ const OrderView = () => {
           setOrder(mapBackendOrderItems(res.data));
         }
       } catch (error) {
-        const err = error as AxiosError<ApiError>;
+        const err = error as AxiosError<IApiError>;
         console.error(err.response?.data.message);
       }
     };

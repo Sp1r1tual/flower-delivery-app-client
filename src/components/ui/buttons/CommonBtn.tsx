@@ -1,4 +1,4 @@
-import { BtnProps } from "@/types";
+import { IBtnProps } from "./types/types";
 
 import styles from "./styles/CommonBtn.module.css";
 
@@ -7,7 +7,7 @@ const CommonBtn = ({
   className = "",
   disabled = false,
   onClick,
-}: BtnProps) => {
+}: IBtnProps) => {
   return (
     <button
       type="button"

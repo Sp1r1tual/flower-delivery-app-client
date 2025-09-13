@@ -16,7 +16,6 @@
   background-color: #fff;
   cursor: pointer;
   margin-bottom: 0.5rem;
-  width: 90%;
 }
 
 .toggleButton:hover {
@@ -25,11 +24,19 @@
 
 @media (max-width: 576px) {
   .toggleButton {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-column: 1 / -1;
+    margin: 0 auto 0.5rem auto;
+    width: fit-content;
+    min-width: 10rem;
   }
 
   .list {
     display: none;
+    width: 100%;
+    justify-content: center;
   }
 
   .list.open {

@@ -1,8 +1,8 @@
-import { ShopType, SortKey } from "@/types";
+import { IShop, SortKeyType } from "@/types";
 
 const useSortedShops = (
-  shops: ShopType[],
-  sort: SortKey,
+  shops: IShop[],
+  sort: SortKeyType,
   favoriteIds: string[],
 ) => {
   return [...shops].sort((a, b) => {

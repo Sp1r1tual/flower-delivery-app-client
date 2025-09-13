@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 
-import { ToastProps } from "@/types";
+interface IToastProps {
+  text: string;
+  duration?: number;
+  onClose: () => void;
+}
 
 import styles from "./styles/Toast.module.css";
 
-const Toast = ({ text, duration = 2000, onClose }: ToastProps) => {
+const Toast = ({ text, duration = 2000, onClose }: IToastProps) => {
   useEffect(() => {
     const timer = setTimeout(() => onClose(), duration);
 

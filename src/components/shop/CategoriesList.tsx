@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/types/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/types/reduxHooks";
 
-import { CategoriesListProps } from "@/types";
+import { ICategory } from "@/types";
 
 import { CategoriesItem } from "./CategoriesItem";
 
@@ -14,7 +14,11 @@ import {
 
 import styles from "./styles/CategoriesList.module.css";
 
-const CategoriesList = ({ categoryNames }: CategoriesListProps) => {
+interface ICategoriesListProps {
+  categoryNames: ICategory[];
+}
+
+const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
   const dispatch = useAppDispatch();
 
   const [isOpen, setIsOpen] = useState(false);

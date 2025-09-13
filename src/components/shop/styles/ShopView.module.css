@@ -1,13 +1,13 @@
 .shop {
-  width: 70rem;
-  padding: 0 0.5rem;
+  width: 100%;
+  padding: 1rem;
   height: 70vh;
   margin: 1rem auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  border: 1px solid #000000;
 }
 
 .emptyMessage {
@@ -17,10 +17,17 @@
   text-align: center;
 }
 
+.loaderWrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 576px) {
   .shop {
-    width: 20rem;
     padding: 0.5rem;
     height: auto;
+    overflow-y: visible;
   }
 }

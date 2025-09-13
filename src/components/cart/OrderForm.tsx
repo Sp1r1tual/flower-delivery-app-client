@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { OrderFormProps, OrderFormData } from "@/types";
+import { IOrderFormData } from "@/types";
 
 import { FORM_ERRORS } from "@/utils/messages/errorsMessages";
 import {
@@ -12,24 +12,33 @@ import {
 
 import styles from "./styles/OrderForm.module.css";
 
-const OrderForm = ({ onSubmit }: OrderFormProps) => {
+interface IOrderFormProps {
+  onSubmit: (data: {
+    userName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+  }) => void;
+}
+
+const OrderForm = ({ onSubmit }: IOrderFormProps) => {
   const {
     register,
     handleSubmit,
     reset,
     clearErrors,
     formState: { errors },
-  } = useForm<OrderFormData>({
+  } = useForm<IOrderFormData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
-  const submit: SubmitHandler<OrderFormData> = (data) => {
+  const submit: SubmitHandler<IOrderFormData> = (data) => {
     onSubmit(data);
     reset();
   };
 
-  const handleInputChange = (fieldName: keyof OrderFormData) => {
+  const handleInputChange = (fieldName: keyof IOrderFormData) => {
     clearErrors(fieldName);
   };
 

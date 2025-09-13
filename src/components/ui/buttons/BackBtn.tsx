@@ -4,11 +4,11 @@ import backIcon from "@/assets/back-svgrepo-com.svg";
 
 import styles from "./styles/BackBtn.module.css";
 
-type BackBtnProps = {
+interface IBackBtnProps {
   to?: string;
-};
+}
 
-const BackBtn = ({ to }: BackBtnProps) => {
+const BackBtn = ({ to }: IBackBtnProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {

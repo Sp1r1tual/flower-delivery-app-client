@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
 import { DotsLoader } from "../ui/loaders/DotsLoader";
 import { CategoriesList } from "./CategoriesList";
@@ -25,7 +25,9 @@ const CategoriesView = () => {
   return (
     <div className={styles.shops}>
       {isCategoriesLoading ? (
-        <DotsLoader />
+        <div className={styles.loaderWrapper}>
+          <DotsLoader />
+        </div>
       ) : categories.length === 0 ? (
         <p className={styles.emptyMessage}>No categories available</p>
       ) : (

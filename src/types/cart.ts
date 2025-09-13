@@ -1,26 +1,20 @@
-type CartType = {
+export interface ICart {
   id: string;
   name: string;
   quantity: number;
   price: number;
   imageUrl: string;
-};
+}
 
-type CartListProps = {
-  cart: CartType[];
-};
-
-type CartSyncPayload = {
+export interface ICartSyncPayload {
   id: string;
   quantity: number;
-};
+}
 
-type CartCheckoutPayload = {
+export interface ICartCheckoutPayload {
   cart: { productId: string; quantity: number }[];
   userName: string;
   email: string;
   phoneNumber: string;
   address: string;
-};
-
-export type { CartType, CartListProps, CartSyncPayload, CartCheckoutPayload };
+}

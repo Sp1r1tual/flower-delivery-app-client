@@ -1,8 +1,16 @@
-import { CategoriesItemProps } from "@/types";
-
 import styles from "./styles/CategoriesItem.module.css";
 
-const CategoriesItem = ({ text, onClick, isSelected }: CategoriesItemProps) => {
+interface ICategoriesItemProps {
+  text: string;
+  isSelected?: boolean;
+  onClick: () => void;
+}
+
+const CategoriesItem = ({
+  text,
+  onClick,
+  isSelected,
+}: ICategoriesItemProps) => {
   return (
     <div
       className={`${styles.item} ${isSelected ? styles.active : ""}`}

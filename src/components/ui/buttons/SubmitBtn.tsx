@@ -1,4 +1,4 @@
-import { BtnProps } from "@/types";
+import { IBtnProps } from "./types/types";
 
 import styles from "./styles/SubmitBtn.module.css";
 
@@ -7,7 +7,7 @@ const SubmitBtn = ({
   className = "",
   loading,
   disabled = false,
-}: BtnProps) => {
+}: IBtnProps) => {
   return (
     <button
       type="submit"

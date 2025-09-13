@@ -1,8 +1,15 @@
 import { useState } from "react";
 
-import { CounterProps } from "@/types";
-
 import styles from "./styles/Counter.module.css";
+
+interface ICounterProps {
+  initialValue?: number;
+  min?: number;
+  max?: number;
+  onIncrease: () => void;
+  onDecrease: () => void;
+  onManualChange: (value: number) => void;
+}
 
 const Counter = ({
   initialValue = 0,
@@ -11,7 +18,7 @@ const Counter = ({
   onIncrease,
   onDecrease,
   onManualChange,
-}: CounterProps) => {
+}: ICounterProps) => {
   const [value, setValue] = useState(initialValue);
 
   const updateValue = (newValue: number) => {

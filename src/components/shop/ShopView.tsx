@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
 import { DotsLoader } from "../ui/loaders/DotsLoader";
 import { ShopList } from "./ShopList";
@@ -29,7 +29,9 @@ const ShopView = () => {
   return (
     <div className={styles.shop}>
       {isProductsLoading ? (
-        <DotsLoader />
+        <div className={styles.loaderWrapper}>
+          <DotsLoader />
+        </div>
       ) : products.length === 0 ? (
         <p className={styles.emptyMessage}>No products available</p>
       ) : (

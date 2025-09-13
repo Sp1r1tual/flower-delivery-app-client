@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ShopType, Category } from "@/types";
+import { IShop, ICategory } from "@/types";
 
 import {
   fetchAllProducts,
@@ -9,8 +9,8 @@ import {
 } from "./shopThunks";
 
 interface IShopState {
-  products: ShopType[];
-  categories: Category[];
+  products: IShop[];
+  categories: ICategory[];
   selectedCategoryId?: string | undefined;
   isProductsLoading: boolean;
   isCategoriesLoading: boolean;

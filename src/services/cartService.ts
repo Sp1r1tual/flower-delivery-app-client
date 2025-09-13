@@ -1,10 +1,10 @@
 import { $api } from "@/api";
 
-import { CartCheckoutPayload, OrderResponse } from "@/types";
+import { ICartCheckoutPayload, IOrderResponse } from "@/types";
 
 class CartService {
-  static checkoutCart(payload: CartCheckoutPayload) {
-    return $api.post<OrderResponse>("/cart/checkout", payload);
+  static checkoutCart(payload: ICartCheckoutPayload) {
+    return $api.post<IOrderResponse>("/cart/checkout", payload);
   }
 }
 

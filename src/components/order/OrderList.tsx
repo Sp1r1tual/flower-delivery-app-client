@@ -1,10 +1,14 @@
-import { OrderListProps } from "@/types";
+import { IOrderResponse } from "@/types";
 
 import { OrderItem } from "./OrderItem";
 
 import styles from "./styles/OrderList.module.css";
 
-const OrderList = ({ order }: OrderListProps) => {
+interface IOrderListProps {
+  order: IOrderResponse;
+}
+
+const OrderList = ({ order }: IOrderListProps) => {
   return (
     <div className={styles.orderList}>
       {order.items.map((item) => (

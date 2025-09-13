@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import { useAppSelector, useAppDispatch } from "@/types/redux/reduxHooks";
+import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
-import { SortKey } from "@/types";
+import { SortKeyType } from "@/types";
 
 import { Sort } from "../sort/Sort";
 
@@ -74,7 +74,10 @@ const Navbar = () => {
 
       <div className={styles.desktopSort}>
         {isRoot && (
-          <Sort sort={sort} onChange={(s: SortKey) => dispatch(setSort(s))} />
+          <Sort
+            sort={sort}
+            onChange={(s: SortKeyType) => dispatch(setSort(s))}
+          />
         )}
       </div>
     </nav>

@@ -12,11 +12,11 @@ import {
 
 import styles from "./styles/CartItem.module.css";
 
-const CartItem = ({ id, name, price, quantity, imageUrl }: ICart) => {
+const CartItem = ({ id, name, price, quantity, category, imageUrl }: ICart) => {
   const dispatch = useAppDispatch();
 
   const handleIncrease = () => {
-    dispatch(addItem({ id, name, price, quantity: 1, imageUrl }));
+    dispatch(addItem({ id, name, price, quantity: 1, category, imageUrl }));
   };
 
   const handleDecrease = () => {

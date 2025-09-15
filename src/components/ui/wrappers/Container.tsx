@@ -2,18 +2,18 @@ import styles from "./styles/Container.module.css";
 
 interface IContainerProps {
   children: React.ReactNode;
-  position?: "left" | "center" | "right";
   showBorder?: boolean;
+  showPadding?: boolean;
 }
 
 const Container = ({
   children,
-  position = "center",
   showBorder = true,
+  showPadding = true,
 }: IContainerProps) => {
   return (
     <div
-      className={`${styles.container} ${styles[position]} ${!showBorder ? styles.noBorder : ""}`}
+      className={`${styles.container} ${!showBorder ? styles.noBorder : ""} ${!showPadding ? styles.noPadding : ""}`}
     >
       {children}
     </div>

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IOrderFormData } from "@/types";
@@ -19,19 +20,28 @@ interface IOrderFormProps {
     phoneNumber: string;
     address: string;
   }) => void;
+  initialAddress?: string;
 }
 
-const OrderForm = ({ onSubmit }: IOrderFormProps) => {
+const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     clearErrors,
     formState: { errors },
   } = useForm<IOrderFormData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
+
+  useEffect(() => {
+    if (initialAddress) {
+      setValue("address", initialAddress);
+      clearErrors("address");
+    }
+  }, [initialAddress, setValue, clearErrors]);
 
   const submit: SubmitHandler<IOrderFormData> = (data) => {
     onSubmit(data);

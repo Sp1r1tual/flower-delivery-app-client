@@ -14,6 +14,7 @@ interface IShopState {
   selectedCategoryId?: string | undefined;
   isProductsLoading: boolean;
   isCategoriesLoading: boolean;
+  hasLoaded: boolean;
   error: string | null;
 }
 
@@ -23,6 +24,7 @@ const initialState: IShopState = {
   selectedCategoryId: undefined,
   isProductsLoading: false,
   isCategoriesLoading: false,
+  hasLoaded: false,
   error: null,
 };
 
@@ -47,10 +49,12 @@ const shopSlice = createSlice({
         state.isProductsLoading = false;
         state.products = action.payload;
         state.selectedCategoryId = undefined;
+        state.hasLoaded = true;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
         state.isProductsLoading = false;
         state.error = action.payload?.message ?? null;
+        state.hasLoaded = true;
       })
 
       .addCase(fetchProductsByCategory.pending, (state) => {

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/types/reduxHooks";
 import { ICategory } from "@/types";
 
 import { CategoriesItem } from "./CategoriesItem";
+import { ToggleButton } from "../ui/buttons/ToggleBtn";
 
 import { setSelectedCategory } from "@/store/redux/shopSlice";
 import {
@@ -36,9 +37,12 @@ const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
 
   return (
     <>
-      <button className={styles.toggleButton} onClick={toggleList}>
-        {isOpen ? "Hide shops" : "Show shops"}
-      </button>
+      <ToggleButton
+        isOpen={isOpen}
+        onToggle={toggleList}
+        openText="Show shops"
+        closeText="Hide shops"
+      />
 
       <div className={`${styles.list} ${isOpen ? styles.open : ""}`}>
         {categoryNames.length > 0 && (

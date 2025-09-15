@@ -20,4 +20,5 @@
   color: #fff;
   border-color: #007bff;
   cursor: default;
+  pointer-events: none;
 }

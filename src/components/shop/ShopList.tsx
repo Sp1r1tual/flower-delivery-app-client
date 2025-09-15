@@ -61,6 +61,7 @@ const ShopList = ({ shops }: IShopListProps) => {
           id={shop.id}
           price={shop.price}
           name={shop.name}
+          category={shop.category}
           imageUrl={shop.imageUrl}
           isFavorite={favoriteIds.includes(shop.id)}
           onToggleFavorite={toggleFavorite}

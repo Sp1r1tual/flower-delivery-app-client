@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
-import { ICart } from "@/types";
+import { IStoreLocation } from "@/types";
 
 import { markerStyles } from "@/utils/styles/markerStyles";
 
@@ -9,7 +9,7 @@ const GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
 const GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
 
 const useGoogleMaps = (
-  items: ICart[],
+  items: IStoreLocation[],
   center: google.maps.LatLngLiteral,
   onLocationSelect?: (address: string) => void,
 ) => {
@@ -41,46 +41,15 @@ const useGoogleMaps = (
 
       const { AdvancedMarkerElement } = google.maps.marker;
 
-      const storesMap = new Map<
-        string,
-        { name: string; location: google.maps.LatLngLiteral }
-      >();
-
-      items.forEach((item) => {
-        if (
-          item.category &&
-          item.category.id &&
-          item.category.location.coordinates
-        ) {
-          const coords = item.category.location.coordinates;
-          const lng = Number(coords[0]);
-          const lat = Number(coords[1]);
-
-          if (!isNaN(lat) && !isNaN(lng)) {
-            const categoryId = item.category.id;
-
-            if (!storesMap.has(categoryId)) {
-              storesMap.set(categoryId, {
-                name: item.category.name,
-                location: { lat, lng },
-              });
-            }
-          }
-        }
-      });
-
-      storesMap.forEach((store) => {
+      items.forEach((store) => {
         const markerDiv = document.createElement("div");
-
         Object.assign(markerDiv.style, markerStyles.container);
 
         const label = document.createElement("div");
-
         label.textContent = store.name;
         Object.assign(label.style, markerStyles.label);
 
         const markerCircle = document.createElement("div");
-
         Object.assign(markerCircle.style, markerStyles.storeCircle);
 
         markerDiv.appendChild(label);
@@ -88,7 +57,7 @@ const useGoogleMaps = (
 
         new AdvancedMarkerElement({
           map: googleMapInstance.current!,
-          position: store.location,
+          position: { lat: store.lat, lng: store.lng },
           content: markerDiv,
         });
       });
@@ -101,12 +70,10 @@ const useGoogleMaps = (
           "click",
           (event: google.maps.MapMouseEvent) => {
             if (!event.latLng) return;
-
             const latLng = event.latLng;
 
             if (!clickMarker) {
               const markerDiv = document.createElement("div");
-
               Object.assign(markerDiv.style, markerStyles.clickCircle);
 
               clickMarker = new google.maps.marker.AdvancedMarkerElement({

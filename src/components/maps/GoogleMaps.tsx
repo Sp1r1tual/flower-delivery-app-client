@@ -1,11 +1,11 @@
 import { useGoogleMaps } from "@/hooks/cart/useGoogleMaps";
 
-import { ICart } from "@/types";
+import { IStoreLocation } from "@/types";
 
 import styles from "./styles/GoogleMaps.module.css";
 
 interface IGoogleMapsProps {
-  items: ICart[];
+  items: IStoreLocation[];
   onLocationSelect?: (address: string) => void;
 }
 

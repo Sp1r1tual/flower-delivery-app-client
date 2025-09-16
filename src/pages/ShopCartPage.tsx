@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
-import { IOrderFormData, ICartCheckoutPayload } from "@/types";
+import { IOrderFormData, ICartCheckoutPayload, IStoreLocation } from "@/types";
 
 import { Row } from "@/components/ui/wrappers/Row";
 import { ContentWrapper } from "@/components/ui/wrappers/ContentWrapper";
@@ -23,16 +23,48 @@ const ShopCartPage = () => {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const [address, setAddress] = useState("");
+  const addressRef = useRef<HTMLInputElement | null>(null);
 
   const { items, isLoading } = useAppSelector((state) => state.cart);
 
+  const getStoreLocations = (): IStoreLocation[] => {
+    const stores = new Map();
+
+    items.forEach((item) => {
+      const coords = item.category?.location?.coordinates;
+
+      if (coords) {
+        stores.set(item.category.id, {
+          id: item.category.id,
+          name: item.category.name,
+          lat: +coords[1],
+          lng: +coords[0],
+        });
+      }
+    });
+    return Array.from(stores.values());
+  };
+
   const toggleGoogleMap = () => setIsOpen((prev) => !prev);
+
+  const handleLocationSelect = (addr: string) => {
+    if (addressRef.current) {
+      const inputElement = addressRef.current as HTMLInputElement & {
+        setFormValue?: (address: string) => void;
+      };
+
+      if (inputElement.setFormValue) {
+        inputElement.setFormValue(addr);
+      } else {
+        inputElement.value = addr;
+      }
+    }
+  };
 
   const handleSubmit = async (formData: IOrderFormData) => {
     const payload: ICartCheckoutPayload = {
       ...formData,
+      address: addressRef.current?.value || formData.address,
       cart: items.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
@@ -48,45 +80,42 @@ const ShopCartPage = () => {
   };
 
   return (
-    <>
-      <ContentWrapper>
-        <Sidebar>
+    <ContentWrapper>
+      <Sidebar>
+        <Container>
           <Container>
-            <Container>
-              <div
-                className={`${styles.mapWrapper} ${isOpen ? styles.open : ""}`}
-              >
-                <GoogleMaps
-                  items={items}
-                  onLocationSelect={(address) => {
-                    setAddress(address);
-                  }}
-                />
-              </div>
-
-              <ToggleButton
-                isOpen={isOpen}
-                onToggle={toggleGoogleMap}
-                openText="Show Google Map"
-                closeText="Hide Google Map"
+            <div
+              className={`${styles.mapWrapper} ${isOpen ? styles.open : ""}`}
+            >
+              <GoogleMaps
+                items={getStoreLocations()}
+                onLocationSelect={handleLocationSelect}
               />
-            </Container>
+            </div>
 
-            <OrderForm onSubmit={handleSubmit} initialAddress={address} />
-          </Container>
-        </Sidebar>
-        <Container showBorder={false} showPadding={false}>
-          <CartView />
-          <Row>
-            <Checkout
-              loading={isLoading}
-              items={items}
-              disabled={items.length === 0}
+            <ToggleButton
+              isOpen={isOpen}
+              onToggle={toggleGoogleMap}
+              openText="Show Google Map"
+              closeText="Hide Google Map"
             />
-          </Row>
+          </Container>
+
+          <OrderForm onSubmit={handleSubmit} addressRef={addressRef} />
         </Container>
-      </ContentWrapper>
-    </>
+      </Sidebar>
+
+      <Container showBorder={false} showPadding={false}>
+        <CartView />
+        <Row>
+          <Checkout
+            loading={isLoading}
+            items={items}
+            disabled={items.length === 0}
+          />
+        </Row>
+      </Container>
+    </ContentWrapper>
   );
 };
 

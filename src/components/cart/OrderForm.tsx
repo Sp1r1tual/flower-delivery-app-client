@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { IOrderFormData } from "@/types";
@@ -14,42 +13,47 @@ import {
 import styles from "./styles/OrderForm.module.css";
 
 interface IOrderFormProps {
-  onSubmit: (data: {
-    userName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-  }) => void;
-  initialAddress?: string;
+  onSubmit: (data: IOrderFormData) => void;
+  addressRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
+const OrderForm = ({ onSubmit, addressRef }: IOrderFormProps) => {
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<IOrderFormData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
-  useEffect(() => {
-    if (initialAddress) {
-      setValue("address", initialAddress);
-      clearErrors("address");
-    }
-  }, [initialAddress, setValue, clearErrors]);
-
   const submit: SubmitHandler<IOrderFormData> = (data) => {
     onSubmit(data);
     reset();
   };
 
-  const handleInputChange = (fieldName: keyof IOrderFormData) => {
-    clearErrors(fieldName);
+  const handleInputChange = (field: keyof IOrderFormData) => {
+    clearErrors(field);
+  };
+
+  const handleAddressRef = (element: HTMLInputElement | null) => {
+    register("address").ref(element);
+
+    if (addressRef && element) {
+      const inputWithFormValue = element as HTMLInputElement & {
+        setFormValue: (address: string) => void;
+      };
+
+      inputWithFormValue.setFormValue = (address: string) => {
+        setValue("address", address, { shouldValidate: true });
+        clearErrors("address");
+      };
+
+      addressRef.current = inputWithFormValue;
+    }
   };
 
   return (
@@ -73,11 +77,9 @@ const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
             onChange: () => handleInputChange("userName"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.userName && (
-            <span className={styles.error}>{errors.userName.message}</span>
-          )}
-        </div>
+        {errors.userName && (
+          <span className={styles.error}>{errors.userName.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -93,11 +95,9 @@ const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
             onChange: () => handleInputChange("email"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.email && (
-            <span className={styles.error}>{errors.email.message}</span>
-          )}
-        </div>
+        {errors.email && (
+          <span className={styles.error}>{errors.email.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -113,11 +113,9 @@ const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
             onChange: () => handleInputChange("phoneNumber"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.phoneNumber && (
-            <span className={styles.error}>{errors.phoneNumber.message}</span>
-          )}
-        </div>
+        {errors.phoneNumber && (
+          <span className={styles.error}>{errors.phoneNumber.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -132,12 +130,11 @@ const OrderForm = ({ onSubmit, initialAddress }: IOrderFormProps) => {
               validateAddress(value) || FORM_ERRORS.invalidAddress,
             onChange: () => handleInputChange("address"),
           })}
+          ref={handleAddressRef}
         />
-        <div className={styles.errorContainer}>
-          {errors.address && (
-            <span className={styles.error}>{errors.address.message}</span>
-          )}
-        </div>
+        {errors.address && (
+          <span className={styles.error}>{errors.address.message}</span>
+        )}
       </div>
     </form>
   );

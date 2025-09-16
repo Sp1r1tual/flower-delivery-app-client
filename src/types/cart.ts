@@ -21,3 +21,10 @@ export interface ICartCheckoutPayload {
   phoneNumber: string;
   address: string;
 }
+
+export interface IStoreLocation {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}

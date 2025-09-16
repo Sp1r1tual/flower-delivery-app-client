@@ -1,12 +1,14 @@
-import { useAppSelector } from "@/types/reduxHooks";
+import { ICart } from "@/types";
 
 import { CartList } from "./CartList";
 
 import styles from "./styles/CartView.module.css";
 
-const CartView = () => {
-  const { items } = useAppSelector((state) => state.cart);
+interface ICartViewProps {
+  items: ICart[];
+}
 
+const CartView = ({ items }: ICartViewProps) => {
   return (
     <div className={styles.cart}>
       {items.length === 0 ? (

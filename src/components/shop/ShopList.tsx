@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
-import { useSortedShops } from "@/hooks/shop/useSortedShop";
+import { useSortedShops } from "@/hooks/useSortedShop";
 
 import { IShop, SortKeyType } from "@/types";
 
@@ -61,6 +61,7 @@ const ShopList = ({ shops }: IShopListProps) => {
           id={shop.id}
           price={shop.price}
           name={shop.name}
+          category={shop.category}
           imageUrl={shop.imageUrl}
           isFavorite={favoriteIds.includes(shop.id)}
           onToggleFavorite={toggleFavorite}

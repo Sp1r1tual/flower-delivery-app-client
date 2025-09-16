@@ -14,6 +14,7 @@ const CartList = ({ cart }: CartListProps) => {
       {cart.map((cartItem) => (
         <CartItem
           key={cartItem.id}
+          category={cartItem.category}
           id={cartItem.id}
           price={cartItem.price}
           quantity={cartItem.quantity}

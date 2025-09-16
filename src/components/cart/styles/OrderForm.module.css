@@ -7,10 +7,9 @@
   padding: 1rem;
   box-sizing: border-box;
   width: 100%;
-  border-radius: 0.5rem;
-  border: 1px solid #000;
   height: 60vh;
   overflow-y: auto;
+  margin-top: 1.5rem;
 }
 
 .formRow {
@@ -58,7 +57,7 @@
 .error {
   color: #e00;
   font-size: 0.875rem;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
   font-weight: 500;
   display: block;
   animation: fadeIn 0.2s ease;
@@ -71,8 +70,6 @@
   overflow: hidden;
   position: absolute;
   top: calc(100% - 1.5rem);
-  left: 0;
-  right: 0;
 }
 
 .errorContainer {
@@ -107,11 +104,13 @@
     padding: 0.75rem;
     height: auto;
     max-height: 75vh;
+    margin-top: 1rem;
   }
 }
 
 @media (max-width: 576px) {
   .orderForm {
+    margin-top: 1rem;
     justify-content: flex-start;
     padding: 0.5rem;
     height: auto;

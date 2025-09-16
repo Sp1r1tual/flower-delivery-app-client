@@ -13,20 +13,17 @@ import {
 import styles from "./styles/OrderForm.module.css";
 
 interface IOrderFormProps {
-  onSubmit: (data: {
-    userName: string;
-    email: string;
-    phoneNumber: string;
-    address: string;
-  }) => void;
+  onSubmit: (data: IOrderFormData) => void;
+  addressRef?: React.RefObject<HTMLInputElement | null>;
 }
 
-const OrderForm = ({ onSubmit }: IOrderFormProps) => {
+const OrderForm = ({ onSubmit, addressRef }: IOrderFormProps) => {
   const {
     register,
     handleSubmit,
     reset,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<IOrderFormData>({
     mode: "onSubmit",
@@ -38,8 +35,25 @@ const OrderForm = ({ onSubmit }: IOrderFormProps) => {
     reset();
   };
 
-  const handleInputChange = (fieldName: keyof IOrderFormData) => {
-    clearErrors(fieldName);
+  const handleInputChange = (field: keyof IOrderFormData) => {
+    clearErrors(field);
+  };
+
+  const handleAddressRef = (element: HTMLInputElement | null) => {
+    register("address").ref(element);
+
+    if (addressRef && element) {
+      const inputWithFormValue = element as HTMLInputElement & {
+        setFormValue: (address: string) => void;
+      };
+
+      inputWithFormValue.setFormValue = (address: string) => {
+        setValue("address", address, { shouldValidate: true });
+        clearErrors("address");
+      };
+
+      addressRef.current = inputWithFormValue;
+    }
   };
 
   return (
@@ -63,11 +77,9 @@ const OrderForm = ({ onSubmit }: IOrderFormProps) => {
             onChange: () => handleInputChange("userName"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.userName && (
-            <span className={styles.error}>{errors.userName.message}</span>
-          )}
-        </div>
+        {errors.userName && (
+          <span className={styles.error}>{errors.userName.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -83,11 +95,9 @@ const OrderForm = ({ onSubmit }: IOrderFormProps) => {
             onChange: () => handleInputChange("email"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.email && (
-            <span className={styles.error}>{errors.email.message}</span>
-          )}
-        </div>
+        {errors.email && (
+          <span className={styles.error}>{errors.email.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -103,11 +113,9 @@ const OrderForm = ({ onSubmit }: IOrderFormProps) => {
             onChange: () => handleInputChange("phoneNumber"),
           })}
         />
-        <div className={styles.errorContainer}>
-          {errors.phoneNumber && (
-            <span className={styles.error}>{errors.phoneNumber.message}</span>
-          )}
-        </div>
+        {errors.phoneNumber && (
+          <span className={styles.error}>{errors.phoneNumber.message}</span>
+        )}
       </div>
 
       <div className={styles.formRow}>
@@ -122,12 +130,11 @@ const OrderForm = ({ onSubmit }: IOrderFormProps) => {
               validateAddress(value) || FORM_ERRORS.invalidAddress,
             onChange: () => handleInputChange("address"),
           })}
+          ref={handleAddressRef}
         />
-        <div className={styles.errorContainer}>
-          {errors.address && (
-            <span className={styles.error}>{errors.address.message}</span>
-          )}
-        </div>
+        {errors.address && (
+          <span className={styles.error}>{errors.address.message}</span>
+        )}
       </div>
     </form>
   );

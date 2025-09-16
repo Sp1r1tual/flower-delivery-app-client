@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useRef } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/types/reduxHooks";
 
 import { ICategory } from "@/types";
 
 import { CategoriesItem } from "./CategoriesItem";
+
+import { ToggleButton } from "../ui/buttons/ToggleBtn";
 
 import { setSelectedCategory } from "@/store/redux/shopSlice";
 import {
@@ -21,13 +23,20 @@ interface ICategoriesListProps {
 const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
   const dispatch = useAppDispatch();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpenRef = useRef(false);
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   const selectedCategoryId = useAppSelector(
     (state) => state.shop.selectedCategoryId,
   );
 
-  const toggleList = () => setIsOpen((prev) => !prev);
+  const toggleList = () => {
+    isOpenRef.current = !isOpenRef.current;
+
+    if (listRef.current && styles.open) {
+      listRef.current.classList.toggle(styles.open, isOpenRef.current);
+    }
+  };
 
   const handleSelectCategory = (categoryId: string) => {
     dispatch(setSelectedCategory(categoryId));
@@ -36,11 +45,14 @@ const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
 
   return (
     <>
-      <button className={styles.toggleButton} onClick={toggleList}>
-        {isOpen ? "Hide shops" : "Show shops"}
-      </button>
+      <ToggleButton
+        isOpenRef={isOpenRef}
+        onToggle={toggleList}
+        openText="Show shops"
+        closeText="Hide shops"
+      />
 
-      <div className={`${styles.list} ${isOpen ? styles.open : ""}`}>
+      <div ref={listRef} className={styles.list}>
         {categoryNames.length > 0 && (
           <CategoriesItem
             key="all"

@@ -1,0 +1,24 @@
+.mapWrapper {
+  display: block;
+  transition: all 0.3s ease-in-out;
+}
+
+@media (max-width: 575px) {
+  .mapWrapper {
+    display: none;
+  }
+
+  .mapWrapper.open {
+    display: block;
+  }
+
+  .toggleButton {
+    display: flex;
+  }
+}
+
+@media (min-width: 576px) {
+  .toggleButton {
+    display: none;
+  }
+}

@@ -1,6 +1,10 @@
 export interface ICategory {
   id: string;
   name: string;
+  location: {
+    type: "Point";
+    coordinates: [number, number];
+  };
 }
 
 export interface IShop {
@@ -8,12 +12,17 @@ export interface IShop {
   name: string;
   price: number;
   imageUrl: string;
+  category: ICategory;
   createdAt: string;
 }
 
 export interface IBackendCategory {
   _id: string;
   name: string;
+  location: {
+    type: "Point";
+    coordinates: [number, number];
+  };
 }
 
 export interface IBackendProduct {
@@ -21,6 +30,7 @@ export interface IBackendProduct {
   name: string;
   price: number;
   imageUrl: string;
+  category: IBackendCategory;
   createdAt?: string;
 }
 

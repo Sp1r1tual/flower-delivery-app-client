@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useAppDispatch } from "@/types/reduxHooks";
 
-import { ICart } from "@/types";
+import { ICart, ICategory } from "@/types";
 
 import { CommonBtn } from "../ui/buttons/CommonBtn";
 import { AddToFavorite } from "../ui/buttons/AddToFavorite";
@@ -17,6 +17,7 @@ interface IShopItemProps {
   name: string;
   price: number;
   imageUrl: string;
+  category: ICategory;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
 }
@@ -27,6 +28,7 @@ const ShopItem = ({
   price,
   imageUrl,
   isFavorite,
+  category,
   onToggleFavorite,
 }: IShopItemProps) => {
   const dispatch = useAppDispatch();
@@ -35,7 +37,7 @@ const ShopItem = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleAddToCart = () => {
-    const item: ICart = { id, name, price, imageUrl, quantity: 1 };
+    const item: ICart = { id, name, price, imageUrl, category, quantity: 1 };
 
     dispatch(addItem(item));
     setShowToast(true);

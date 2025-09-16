@@ -12,19 +12,14 @@ import styles from "./styles/ShopView.module.css";
 const ShopView = () => {
   const dispatch = useAppDispatch();
 
-  const { products, isProductsLoading, selectedCategoryId } = useAppSelector(
-    (state) => state.shop,
-  );
+  const { products, isProductsLoading, selectedCategoryId, hasLoaded } =
+    useAppSelector((state) => state.shop);
 
   useEffect(() => {
-    if (
-      products.length === 0 &&
-      selectedCategoryId === undefined &&
-      !isProductsLoading
-    ) {
+    if (selectedCategoryId === undefined && !isProductsLoading && !hasLoaded) {
       dispatch(fetchAllProducts());
     }
-  }, [dispatch, products.length, selectedCategoryId, isProductsLoading]);
+  }, [dispatch, selectedCategoryId, isProductsLoading, hasLoaded]);
 
   return (
     <div className={styles.shop}>

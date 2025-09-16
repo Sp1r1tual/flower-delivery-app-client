@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
 import { IStoreLocation } from "@/types";
-
 import { markerStyles } from "@/utils/styles/markerStyles";
 
 const GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY;
@@ -16,8 +15,43 @@ const useGoogleMaps = (
 ) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const googleMapInstance = useRef<google.maps.Map | null>(null);
+  const markersRef = useRef<
+    Map<string, google.maps.marker.AdvancedMarkerElement>
+  >(new Map());
   const clickMarker = useRef<google.maps.marker.AdvancedMarkerElement | null>(
     null,
+  );
+
+  const [mapReady, setMapReady] = useState(false);
+
+  const placeClickMarker = useCallback(
+    (position: google.maps.LatLng | google.maps.LatLngLiteral) => {
+      if (!googleMapInstance.current) return;
+
+      const { AdvancedMarkerElement } = google.maps.marker;
+
+      if (!clickMarker.current) {
+        const markerDiv = document.createElement("div");
+        Object.assign(markerDiv.style, markerStyles.clickCircle);
+
+        clickMarker.current = new AdvancedMarkerElement({
+          position,
+          map: googleMapInstance.current,
+          content: markerDiv,
+          title: "Selected location",
+        });
+      } else {
+        clickMarker.current.position = position;
+      }
+
+      googleMapInstance.current.setCenter(position);
+      googleMapInstance.current.setZoom(14);
+
+      if (position instanceof google.maps.LatLng) {
+        onLocationSelect?.(position);
+      }
+    },
+    [onLocationSelect],
   );
 
   useEffect(() => {
@@ -43,116 +77,109 @@ const useGoogleMaps = (
         zoomControl: true,
       });
 
-      const { AdvancedMarkerElement } = google.maps.marker;
-
-      items.forEach((store) => {
-        const markerDiv = document.createElement("div");
-        Object.assign(markerDiv.style, markerStyles.container);
-
-        const label = document.createElement("div");
-        label.textContent = store.name;
-        Object.assign(label.style, markerStyles.label);
-
-        const markerCircle = document.createElement("div");
-        Object.assign(markerCircle.style, markerStyles.storeCircle);
-
-        markerDiv.appendChild(label);
-        markerDiv.appendChild(markerCircle);
-
-        new AdvancedMarkerElement({
-          map: googleMapInstance.current!,
-          position: { lat: store.lat, lng: store.lng },
-          content: markerDiv,
-        });
-      });
-
-      const geocoder = new google.maps.Geocoder();
-
-      if (addressRef && addressRef.current) {
-        addressRef.current.onblur = () => {
-          const address = addressRef.current?.value;
-
-          if (!address) return;
-
-          geocoder.geocode({ address }, (results, status) => {
-            if (status === "OK" && results && results[0]) {
-              const location = results[0].geometry.location;
-
-              if (!clickMarker.current) {
-                const markerDiv = document.createElement("div");
-                Object.assign(markerDiv.style, markerStyles.clickCircle);
-
-                clickMarker.current = new AdvancedMarkerElement({
-                  position: location,
-                  map: googleMapInstance.current!,
-                  content: markerDiv,
-                  title: "Selected location",
-                });
-              } else {
-                clickMarker.current.position = location;
-              }
-
-              googleMapInstance.current?.setCenter(location);
-              googleMapInstance.current?.setZoom(14);
-
-              onLocationSelect?.(location);
-            }
-          });
-        };
-      }
-
-      googleMapInstance.current.addListener(
-        "click",
-        (event: google.maps.MapMouseEvent) => {
-          if (!event.latLng) return;
-
-          if (!clickMarker.current) {
-            const markerDiv = document.createElement("div");
-            Object.assign(markerDiv.style, markerStyles.clickCircle);
-
-            clickMarker.current = new AdvancedMarkerElement({
-              position: event.latLng,
-              map: googleMapInstance.current!,
-              content: markerDiv,
-              title: "Selected location",
-            });
-          } else {
-            clickMarker.current.position = event.latLng;
-          }
-
-          googleMapInstance.current?.setCenter(event.latLng);
-          googleMapInstance.current?.setZoom(14);
-
-          if (addressRef?.current) {
-            geocoder.geocode({ location: event.latLng }, (results, status) => {
-              if (status === "OK" && results && results[0]) {
-                const inputWithFormValue =
-                  addressRef.current as HTMLInputElement & {
-                    setFormValue?: (address: string) => void;
-                  };
-
-                if (inputWithFormValue.setFormValue) {
-                  inputWithFormValue.setFormValue(results[0].formatted_address);
-                } else {
-                  inputWithFormValue.value = results[0].formatted_address;
-                }
-
-                if (event.latLng) {
-                  onLocationSelect?.(event.latLng);
-                }
-              }
-            });
-          }
-        },
-      );
+      setMapReady(true);
     };
 
     loadMap();
+  }, [center]);
 
-    return () => {
-      googleMapInstance.current = null;
+  useEffect(() => {
+    if (!googleMapInstance.current) return;
+
+    const geocoder = new google.maps.Geocoder();
+    const map = googleMapInstance.current;
+
+    const handleClick = (event: google.maps.MapMouseEvent) => {
+      if (!event.latLng) return;
+
+      placeClickMarker(event.latLng);
+
+      if (addressRef?.current) {
+        geocoder.geocode({ location: event.latLng }, (results, status) => {
+          if (status === "OK" && results && results[0]) {
+            const inputWithFormValue =
+              addressRef.current as HTMLInputElement & {
+                setFormValue?: (address: string) => void;
+              };
+
+            if (inputWithFormValue.setFormValue) {
+              inputWithFormValue.setFormValue(results[0].formatted_address);
+            } else {
+              inputWithFormValue.value = results[0].formatted_address;
+            }
+          }
+        });
+      }
     };
-  }, [items, center, onLocationSelect, addressRef]);
+
+    const listener = map.addListener("click", handleClick);
+
+    return () => listener.remove();
+  }, [mapReady, addressRef, placeClickMarker]);
+
+  useEffect(() => {
+    if (!googleMapInstance.current || !addressRef?.current) return;
+
+    const geocoder = new google.maps.Geocoder();
+    const inputEl = addressRef.current;
+
+    const handleBlur = () => {
+      const address = inputEl?.value;
+
+      if (!address) return;
+
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === "OK" && results && results[0]) {
+          const location = results[0].geometry.location;
+
+          placeClickMarker(location);
+        }
+      });
+    };
+
+    inputEl.addEventListener("blur", handleBlur);
+    return () => inputEl.removeEventListener("blur", handleBlur);
+  }, [mapReady, addressRef, placeClickMarker]);
+
+  useEffect(() => {
+    if (!googleMapInstance.current || !mapReady) return;
+
+    const { AdvancedMarkerElement } = google.maps.marker;
+
+    items.forEach((store) => {
+      if (markersRef.current.has(store.id)) return;
+
+      const markerDiv = document.createElement("div");
+      Object.assign(markerDiv.style, markerStyles.container);
+
+      const label = document.createElement("div");
+      label.textContent = store.name;
+      Object.assign(label.style, markerStyles.label);
+
+      const markerCircle = document.createElement("div");
+      Object.assign(markerCircle.style, markerStyles.storeCircle);
+
+      markerDiv.appendChild(label);
+      markerDiv.appendChild(markerCircle);
+
+      const marker = new AdvancedMarkerElement({
+        map: googleMapInstance.current,
+        position: { lat: store.lat, lng: store.lng },
+        content: markerDiv,
+      });
+
+      markersRef.current.set(store.id, marker);
+    });
+
+    markersRef.current.forEach((marker, id) => {
+      const stillExists = items.some((store) => store.id === id);
+
+      if (!stillExists) {
+        marker.map = null;
+        markersRef.current.delete(id);
+      }
+    });
+  }, [items, mapReady]);
 
   return mapRef;
 };

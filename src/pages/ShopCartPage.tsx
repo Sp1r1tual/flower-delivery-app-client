@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
@@ -24,14 +24,22 @@ const ShopCartPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [isOpen, setIsOpen] = useState(false);
-
+  const isMapOpenRef = useRef(false);
+  const mapWrapperRef = useRef<HTMLDivElement | null>(null);
   const addressRef = useRef<HTMLInputElement | null>(null);
   const selectedCoordsRef = useRef<google.maps.LatLng | null>(null);
 
   const { items, isLoading } = useAppSelector((state) => state.cart);
 
-  const toggleGoogleMap = () => setIsOpen((prev) => !prev);
+  const toggleGoogleMap = () => {
+    isMapOpenRef.current = !isMapOpenRef.current;
+
+    if (mapWrapperRef.current) {
+      mapWrapperRef.current.style.display = isMapOpenRef.current
+        ? "block"
+        : "none";
+    }
+  };
 
   const handleLocationSelect = (coords: google.maps.LatLng) => {
     selectedCoordsRef.current = coords;
@@ -50,9 +58,7 @@ const ShopCartPage = () => {
     const resultAction = await dispatch(checkoutCart(payload));
 
     if (checkoutCart.fulfilled.match(resultAction)) {
-      const orderNumber = resultAction.payload.orderNumber;
-
-      navigate(`/order/${orderNumber}`);
+      navigate(`/order/${resultAction.payload.orderNumber}`);
     }
   };
 
@@ -61,9 +67,7 @@ const ShopCartPage = () => {
       <Sidebar>
         <Container>
           <Container>
-            <div
-              className={`${styles.mapWrapper} ${isOpen ? styles.open : ""}`}
-            >
+            <div ref={mapWrapperRef} className={styles.mapWrapper}>
               <GoogleMaps
                 items={getStoreLocations(items)}
                 onLocationSelect={handleLocationSelect}
@@ -71,7 +75,7 @@ const ShopCartPage = () => {
               />
             </div>
             <ToggleButton
-              isOpen={isOpen}
+              isOpenRef={isMapOpenRef}
               onToggle={toggleGoogleMap}
               openText="Show Google Map"
               closeText="Hide Google Map"

@@ -57,7 +57,7 @@
 .error {
   color: #e00;
   font-size: 0.875rem;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
   font-weight: 500;
   display: block;
   animation: fadeIn 0.2s ease;
@@ -70,8 +70,6 @@
   overflow: hidden;
   position: absolute;
   top: calc(100% - 1.5rem);
-  left: 0;
-  right: 0;
 }
 
 .errorContainer {

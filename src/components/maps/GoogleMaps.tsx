@@ -1,4 +1,9 @@
-import { useGoogleMaps } from "@/hooks/cart/useGoogleMaps";
+import { useEffect } from "react";
+import { GoogleMap } from "@react-google-maps/api";
+
+import { useGoogleMaps } from "@/hooks/useGoogleMaps";
+
+import { DotsLoader } from "../ui/loaders/DotsLoader";
 
 import { IStoreLocation } from "@/types";
 
@@ -17,11 +22,55 @@ const GoogleMaps = ({
   onLocationSelect,
   addressRef,
 }: IGoogleMapsProps) => {
-  const mapRef = useGoogleMaps(items, center, onLocationSelect, addressRef);
+  const {
+    isLoaded,
+    onLoad,
+    onUnmount,
+    onClick,
+    mapOptions,
+    geocodeAddress,
+    updateMarkers,
+  } = useGoogleMaps(items, center, onLocationSelect, addressRef);
+
+  useEffect(() => {
+    updateMarkers();
+  }, [items, updateMarkers]);
+
+  useEffect(() => {
+    if (!addressRef?.current || !isLoaded) return;
+
+    const inputEl = addressRef.current;
+
+    const handleBlur = () => {
+      const address = inputEl?.value;
+
+      if (address) {
+        geocodeAddress(address);
+      }
+    };
+
+    inputEl.addEventListener("blur", handleBlur);
+
+    return () => inputEl.removeEventListener("blur", handleBlur);
+  }, [addressRef, geocodeAddress, isLoaded]);
+
+  if (!isLoaded) {
+    return (
+      <div className={styles.wrapper}>
+        <DotsLoader />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>
-      <div ref={mapRef} className={styles.map} />
+      <GoogleMap
+        mapContainerClassName={styles.map}
+        options={mapOptions}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        onClick={onClick}
+      />
     </div>
   );
 };

@@ -1,8 +1,14 @@
-const markerStyles = {
+interface MarkerStyles {
+  container: Partial<CSSStyleDeclaration>;
+  label: Partial<CSSStyleDeclaration>;
+  circle: Partial<CSSStyleDeclaration>;
+}
+
+const storeMarkerStyles: MarkerStyles = {
   container: {
     display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center" as const,
+    flexDirection: "column",
+    alignItems: "center",
   },
   label: {
     background: "white",
@@ -13,18 +19,23 @@ const markerStyles = {
     boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
     marginBottom: "4px",
   },
-  storeCircle: {
+  circle: {
     width: "12px",
     height: "12px",
     borderRadius: "50%",
     background: "#FF0000",
   },
-  clickCircle: {
+};
+
+const clickMarkerStyles: MarkerStyles = {
+  container: {
     width: "12px",
     height: "12px",
     borderRadius: "50%",
     background: "#0000FF",
   },
+  label: {},
+  circle: {},
 };
 
-export { markerStyles };
+export { storeMarkerStyles, clickMarkerStyles };

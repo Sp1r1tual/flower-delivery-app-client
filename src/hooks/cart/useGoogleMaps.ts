@@ -11,10 +11,14 @@ const GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID;
 const useGoogleMaps = (
   items: IStoreLocation[],
   center: google.maps.LatLngLiteral,
-  onLocationSelect?: (address: string) => void,
+  onLocationSelect?: (coords: google.maps.LatLng) => void,
+  addressRef?: React.RefObject<HTMLInputElement | null>,
 ) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const googleMapInstance = useRef<google.maps.Map | null>(null);
+  const clickMarker = useRef<google.maps.marker.AdvancedMarkerElement | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -62,38 +66,85 @@ const useGoogleMaps = (
         });
       });
 
-      if (onLocationSelect) {
-        const geocoder = new google.maps.Geocoder();
-        let clickMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+      const geocoder = new google.maps.Geocoder();
 
-        googleMapInstance.current.addListener(
-          "click",
-          (event: google.maps.MapMouseEvent) => {
-            if (!event.latLng) return;
-            const latLng = event.latLng;
+      if (addressRef && addressRef.current) {
+        addressRef.current.onblur = () => {
+          const address = addressRef.current?.value;
 
-            if (!clickMarker) {
-              const markerDiv = document.createElement("div");
-              Object.assign(markerDiv.style, markerStyles.clickCircle);
+          if (!address) return;
 
-              clickMarker = new google.maps.marker.AdvancedMarkerElement({
-                position: latLng,
-                map: googleMapInstance.current!,
-                content: markerDiv,
-                title: "Selected location",
-              });
-            } else {
-              clickMarker.position = latLng;
+          geocoder.geocode({ address }, (results, status) => {
+            if (status === "OK" && results && results[0]) {
+              const location = results[0].geometry.location;
+
+              if (!clickMarker.current) {
+                const markerDiv = document.createElement("div");
+                Object.assign(markerDiv.style, markerStyles.clickCircle);
+
+                clickMarker.current = new AdvancedMarkerElement({
+                  position: location,
+                  map: googleMapInstance.current!,
+                  content: markerDiv,
+                  title: "Selected location",
+                });
+              } else {
+                clickMarker.current.position = location;
+              }
+
+              googleMapInstance.current?.setCenter(location);
+              googleMapInstance.current?.setZoom(14);
+
+              onLocationSelect?.(location);
             }
+          });
+        };
+      }
 
-            geocoder.geocode({ location: latLng }, (results, status) => {
+      googleMapInstance.current.addListener(
+        "click",
+        (event: google.maps.MapMouseEvent) => {
+          if (!event.latLng) return;
+
+          if (!clickMarker.current) {
+            const markerDiv = document.createElement("div");
+            Object.assign(markerDiv.style, markerStyles.clickCircle);
+
+            clickMarker.current = new AdvancedMarkerElement({
+              position: event.latLng,
+              map: googleMapInstance.current!,
+              content: markerDiv,
+              title: "Selected location",
+            });
+          } else {
+            clickMarker.current.position = event.latLng;
+          }
+
+          googleMapInstance.current?.setCenter(event.latLng);
+          googleMapInstance.current?.setZoom(14);
+
+          if (addressRef?.current) {
+            geocoder.geocode({ location: event.latLng }, (results, status) => {
               if (status === "OK" && results && results[0]) {
-                onLocationSelect(results[0].formatted_address);
+                const inputWithFormValue =
+                  addressRef.current as HTMLInputElement & {
+                    setFormValue?: (address: string) => void;
+                  };
+
+                if (inputWithFormValue.setFormValue) {
+                  inputWithFormValue.setFormValue(results[0].formatted_address);
+                } else {
+                  inputWithFormValue.value = results[0].formatted_address;
+                }
+
+                if (event.latLng) {
+                  onLocationSelect?.(event.latLng);
+                }
               }
             });
-          },
-        );
-      }
+          }
+        },
+      );
     };
 
     loadMap();
@@ -101,7 +152,7 @@ const useGoogleMaps = (
     return () => {
       googleMapInstance.current = null;
     };
-  }, [items, center, onLocationSelect]);
+  }, [items, center, onLocationSelect, addressRef]);
 
   return mapRef;
 };

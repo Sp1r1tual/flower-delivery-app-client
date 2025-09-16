@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
 
-import { IOrderFormData, ICartCheckoutPayload, IStoreLocation } from "@/types";
+import { IOrderFormData, ICartCheckoutPayload } from "@/types";
 
 import { Row } from "@/components/ui/wrappers/Row";
 import { ContentWrapper } from "@/components/ui/wrappers/ContentWrapper";
@@ -16,6 +16,8 @@ import { checkoutCart } from "@/store/redux/cartThunks";
 import { Checkout } from "@/components/cart/Checkout";
 import { GoogleMaps } from "@/components/maps/GoogleMaps";
 
+import { getStoreLocations } from "@/utils/cart/getStoreLocations";
+
 import styles from "./styles/ShopCartPage.module.css";
 
 const ShopCartPage = () => {
@@ -23,42 +25,16 @@ const ShopCartPage = () => {
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
+
   const addressRef = useRef<HTMLInputElement | null>(null);
+  const selectedCoordsRef = useRef<google.maps.LatLng | null>(null);
 
   const { items, isLoading } = useAppSelector((state) => state.cart);
 
-  const getStoreLocations = (): IStoreLocation[] => {
-    const stores = new Map();
-
-    items.forEach((item) => {
-      const coords = item.category?.location?.coordinates;
-
-      if (coords) {
-        stores.set(item.category.id, {
-          id: item.category.id,
-          name: item.category.name,
-          lat: +coords[1],
-          lng: +coords[0],
-        });
-      }
-    });
-    return Array.from(stores.values());
-  };
-
   const toggleGoogleMap = () => setIsOpen((prev) => !prev);
 
-  const handleLocationSelect = (addr: string) => {
-    if (addressRef.current) {
-      const inputElement = addressRef.current as HTMLInputElement & {
-        setFormValue?: (address: string) => void;
-      };
-
-      if (inputElement.setFormValue) {
-        inputElement.setFormValue(addr);
-      } else {
-        inputElement.value = addr;
-      }
-    }
+  const handleLocationSelect = (coords: google.maps.LatLng) => {
+    selectedCoordsRef.current = coords;
   };
 
   const handleSubmit = async (formData: IOrderFormData) => {
@@ -75,6 +51,7 @@ const ShopCartPage = () => {
 
     if (checkoutCart.fulfilled.match(resultAction)) {
       const orderNumber = resultAction.payload.orderNumber;
+
       navigate(`/order/${orderNumber}`);
     }
   };
@@ -88,11 +65,11 @@ const ShopCartPage = () => {
               className={`${styles.mapWrapper} ${isOpen ? styles.open : ""}`}
             >
               <GoogleMaps
-                items={getStoreLocations()}
+                items={getStoreLocations(items)}
                 onLocationSelect={handleLocationSelect}
+                addressRef={addressRef}
               />
             </div>
-
             <ToggleButton
               isOpen={isOpen}
               onToggle={toggleGoogleMap}
@@ -106,7 +83,7 @@ const ShopCartPage = () => {
       </Sidebar>
 
       <Container showBorder={false} showPadding={false}>
-        <CartView />
+        <CartView items={items} />
         <Row>
           <Checkout
             loading={isLoading}

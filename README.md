@@ -7,8 +7,9 @@ The project is built with **React**, **TypeScript**, and **Vite**, following mod
 
 ## 🚀 Features
 
-- 📦 Product catalog browsing
+- 📦 Product catalog browsing with server pagination
 - 🛒 Shopping cart functionality
+- 🗺️ Set address via Google Maps and show locations of shops with products in the cart
 - 🧾 Order creation
 - 🔄 State management with **Redux Toolkit**
 - ✅ Form validation with **React Hook Form**

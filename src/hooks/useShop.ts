@@ -1,9 +1,8 @@
 import { useEffect, useCallback } from "react";
 
 import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
-import { usePagination } from "@/hooks/usePagination";
 
-import { setSelectedCategory } from "@/store/redux/shopSlice";
+import { setSelectedCategory, setCurrentPage } from "@/store/redux/shopSlice";
 import {
   fetchCategories,
   fetchProductsByCategory,
@@ -21,10 +20,28 @@ export const useShop = () => {
     selectedCategoryId,
     hasLoaded,
     totalPages,
+    currentPage,
   } = useAppSelector((state) => state.shop);
 
-  const { currentPage, setCurrentPage, getPageNumbers, limit } =
-    usePagination();
+  const limit = 8;
+
+  const getPageNumbers = (
+    totalPages: number,
+    maxVisible: number = 5,
+  ): number[] => {
+    const pages: number[] = [];
+
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    const end = Math.min(totalPages, start + maxVisible - 1);
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) pages.push(i);
+
+    return pages;
+  };
 
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
@@ -46,18 +63,18 @@ export const useShop = () => {
 
   const selectCategory = (categoryId: string) => {
     dispatch(setSelectedCategory(categoryId));
-    setCurrentPage(1);
+    dispatch(setCurrentPage(1));
     loadProductsByCategory(categoryId, 1);
   };
 
   const showAllProducts = () => {
     dispatch(setSelectedCategory(undefined));
-    setCurrentPage(1);
+    dispatch(setCurrentPage(1));
     dispatch(fetchAllProducts({ page: 1, limit }));
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    dispatch(setCurrentPage(page));
 
     if (selectedCategoryId) {
       loadProductsByCategory(selectedCategoryId, page);
@@ -83,7 +100,7 @@ export const useShop = () => {
         products.length === 0 ||
         products.some((p) => p.category.id !== selectedCategoryId)
       ) {
-        setCurrentPage(1);
+        dispatch(setCurrentPage(1));
         dispatch(
           fetchProductsByCategory({
             categoryId: selectedCategoryId,
@@ -97,14 +114,7 @@ export const useShop = () => {
         dispatch(fetchAllProducts({ page: currentPage, limit }));
       }
     }
-  }, [
-    dispatch,
-    selectedCategoryId,
-    products,
-    limit,
-    currentPage,
-    setCurrentPage,
-  ]);
+  }, [dispatch, selectedCategoryId, products, limit, currentPage]);
 
   return {
     categories,

@@ -18,6 +18,7 @@ interface IShopState {
   error: string | null;
   total: number;
   totalPages: number;
+  currentPage: number;
 }
 
 const initialState: IShopState = {
@@ -30,6 +31,7 @@ const initialState: IShopState = {
   error: null,
   total: 0,
   totalPages: 0,
+  currentPage: 1,
 };
 
 const shopSlice = createSlice({
@@ -38,6 +40,9 @@ const shopSlice = createSlice({
   reducers: {
     setSelectedCategory(state, action: PayloadAction<string | undefined>) {
       state.selectedCategoryId = action.payload;
+    },
+    setCurrentPage(state, action: PayloadAction<number>) {
+      state.currentPage = action.payload;
     },
     clearError(state) {
       state.error = null;
@@ -94,5 +99,6 @@ const shopSlice = createSlice({
   },
 });
 
-export const { setSelectedCategory, clearError } = shopSlice.actions;
+export const { setSelectedCategory, setCurrentPage, clearError } =
+  shopSlice.actions;
 export default shopSlice.reducer;

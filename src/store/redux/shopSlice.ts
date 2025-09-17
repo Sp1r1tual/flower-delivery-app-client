@@ -8,10 +8,16 @@ import {
   fetchCategories,
 } from "./shopThunks";
 
+interface IProductsCache {
+  [categoryId: string]: {
+    [page: number]: IShop[];
+  };
+}
+
 interface IShopState {
-  products: IShop[];
+  productsCache: IProductsCache;
   categories: ICategory[];
-  selectedCategoryId?: string | undefined;
+  selectedCategoryId: string | undefined;
   isProductsLoading: boolean;
   isCategoriesLoading: boolean;
   hasLoaded: boolean;
@@ -22,7 +28,7 @@ interface IShopState {
 }
 
 const initialState: IShopState = {
-  products: [],
+  productsCache: {},
   categories: [],
   selectedCategoryId: undefined,
   isProductsLoading: false,
@@ -40,6 +46,7 @@ const shopSlice = createSlice({
   reducers: {
     setSelectedCategory(state, action: PayloadAction<string | undefined>) {
       state.selectedCategoryId = action.payload;
+      state.currentPage = 1;
     },
     setCurrentPage(state, action: PayloadAction<number>) {
       state.currentPage = action.payload;
@@ -50,16 +57,35 @@ const shopSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(fetchCategories.pending, (state) => {
+        state.isCategoriesLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchCategories.fulfilled, (state, action) => {
+        state.isCategoriesLoading = false;
+        state.categories = action.payload;
+      })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.isCategoriesLoading = false;
+        state.error = action.payload?.message ?? null;
+      })
+
       .addCase(fetchAllProducts.pending, (state) => {
         state.isProductsLoading = true;
         state.error = null;
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.isProductsLoading = false;
-        state.products = action.payload.products;
-        state.total = action.payload.total;
+
+        const categoryKey = "all";
+
+        if (!state.productsCache[categoryKey])
+          state.productsCache[categoryKey] = {};
+
+        state.productsCache[categoryKey][state.currentPage] =
+          action.payload.products;
         state.totalPages = action.payload.totalPages;
-        state.selectedCategoryId = undefined;
+        state.total = action.payload.total;
         state.hasLoaded = true;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
@@ -74,27 +100,22 @@ const shopSlice = createSlice({
       })
       .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
         state.isProductsLoading = false;
-        state.products = action.payload.products;
-        state.total = action.payload.total;
+
+        const categoryKey = action.meta.arg.categoryId;
+
+        if (!state.productsCache[categoryKey])
+          state.productsCache[categoryKey] = {};
+
+        state.productsCache[categoryKey][state.currentPage] =
+          action.payload.products;
         state.totalPages = action.payload.totalPages;
+        state.total = action.payload.total;
         state.hasLoaded = true;
       })
       .addCase(fetchProductsByCategory.rejected, (state, action) => {
         state.isProductsLoading = false;
         state.error = action.payload?.message ?? null;
-      })
-
-      .addCase(fetchCategories.pending, (state) => {
-        state.isCategoriesLoading = true;
-        state.error = null;
-      })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.isCategoriesLoading = false;
-        state.categories = action.payload;
-      })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.isCategoriesLoading = false;
-        state.error = action.payload?.message ?? null;
+        state.hasLoaded = true;
       });
   },
 });

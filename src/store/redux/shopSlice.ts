@@ -10,7 +10,11 @@ import {
 
 interface IProductsCache {
   [categoryId: string]: {
-    [page: number]: IShop[];
+    [page: number]: {
+      products: IShop[];
+      totalPages: number;
+      total: number;
+    };
   };
 }
 
@@ -22,8 +26,6 @@ interface IShopState {
   isCategoriesLoading: boolean;
   hasLoaded: boolean;
   error: string | null;
-  total: number;
-  totalPages: number;
   currentPage: number;
 }
 
@@ -35,8 +37,6 @@ const initialState: IShopState = {
   isCategoriesLoading: false,
   hasLoaded: false,
   error: null,
-  total: 0,
-  totalPages: 0,
   currentPage: 1,
 };
 
@@ -47,6 +47,7 @@ const shopSlice = createSlice({
     setSelectedCategory(state, action: PayloadAction<string | undefined>) {
       state.selectedCategoryId = action.payload;
       state.currentPage = 1;
+      state.hasLoaded = false;
     },
     setCurrentPage(state, action: PayloadAction<number>) {
       state.currentPage = action.payload;
@@ -82,10 +83,12 @@ const shopSlice = createSlice({
         if (!state.productsCache[categoryKey])
           state.productsCache[categoryKey] = {};
 
-        state.productsCache[categoryKey][state.currentPage] =
-          action.payload.products;
-        state.totalPages = action.payload.totalPages;
-        state.total = action.payload.total;
+        state.productsCache[categoryKey][state.currentPage] = {
+          products: action.payload.products,
+          totalPages: action.payload.totalPages,
+          total: action.payload.total,
+        };
+
         state.hasLoaded = true;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
@@ -106,10 +109,12 @@ const shopSlice = createSlice({
         if (!state.productsCache[categoryKey])
           state.productsCache[categoryKey] = {};
 
-        state.productsCache[categoryKey][state.currentPage] =
-          action.payload.products;
-        state.totalPages = action.payload.totalPages;
-        state.total = action.payload.total;
+        state.productsCache[categoryKey][state.currentPage] = {
+          products: action.payload.products,
+          totalPages: action.payload.totalPages,
+          total: action.payload.total,
+        };
+
         state.hasLoaded = true;
       })
       .addCase(fetchProductsByCategory.rejected, (state, action) => {

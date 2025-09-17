@@ -33,6 +33,24 @@
   align-items: center;
 }
 
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+
+.shopList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.paginationWrapper {
+  margin-top: auto;
+  padding-top: 1rem;
+  flex-shrink: 0;
+}
+
 @media (max-width: 576px) {
   .shop {
     padding: 0.5rem;

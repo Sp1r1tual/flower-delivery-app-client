@@ -38,17 +38,21 @@ const ShopView = ({
           <p className={styles.emptyMessage}>No products available</p>
         </div>
       ) : (
-        <>
-          <ShopList shops={products} />
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            hasPrev={hasPrev}
-            hasNext={hasNext}
-            onPageChange={onPageChange}
-            getPageNumbers={getPageNumbers}
-          />
-        </>
+        <div className={styles.contentWrapper}>
+          <div className={styles.shopList}>
+            <ShopList shops={products} />
+          </div>
+          <div className={styles.paginationWrapper}>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              hasPrev={hasPrev}
+              hasNext={hasNext}
+              onPageChange={onPageChange}
+              getPageNumbers={getPageNumbers}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

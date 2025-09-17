@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 
-import { IShop, ICategory, IApiError } from "@/types";
+import { ICategory, IProductsResponse, IApiError } from "@/types";
 
 import { ShopService } from "@/services/shopService";
 
@@ -29,14 +29,18 @@ const fetchCategories = createAsyncThunk<
 });
 
 const fetchAllProducts = createAsyncThunk<
-  IShop[],
-  void,
+  IProductsResponse,
+  { page: number; limit: number },
   { rejectValue: IApiError }
->("shop/fetchAllProducts", async (_, { rejectWithValue }) => {
+>("shop/fetchAllProducts", async ({ page, limit }, { rejectWithValue }) => {
   try {
-    const response = await ShopService.getAllProducts();
+    const response = await ShopService.getAllProducts(page, limit);
 
-    return response.data.map(mapBackendProductToShopType);
+    return {
+      products: response.data.items.map(mapBackendProductToShopType),
+      total: response.data.total,
+      totalPages: response.data.totalPages,
+    };
   } catch (error) {
     const err = error as AxiosError<IApiError>;
 
@@ -47,21 +51,32 @@ const fetchAllProducts = createAsyncThunk<
 });
 
 const fetchProductsByCategory = createAsyncThunk<
-  IShop[],
-  string,
+  IProductsResponse,
+  { categoryId: string; page: number; limit: number },
   { rejectValue: IApiError }
->("shop/fetchProductsByCategory", async (categoryId, { rejectWithValue }) => {
-  try {
-    const response = await ShopService.getProductsByCategory(categoryId);
+>(
+  "shop/fetchProductsByCategory",
+  async ({ categoryId, page, limit }, { rejectWithValue }) => {
+    try {
+      const response = await ShopService.getProductsByCategory(
+        categoryId,
+        page,
+        limit,
+      );
 
-    return response.data.map(mapBackendProductToShopType);
-  } catch (error) {
-    const err = error as AxiosError<IApiError>;
+      return {
+        products: response.data.items.map(mapBackendProductToShopType),
+        total: response.data.total,
+        totalPages: response.data.totalPages,
+      };
+    } catch (error) {
+      const err = error as AxiosError<IApiError>;
 
-    return rejectWithValue(
-      err.response?.data || { message: "Error loading products" },
-    );
-  }
-});
+      return rejectWithValue(
+        err.response?.data || { message: "Error loading products" },
+      );
+    }
+  },
+);
 
 export { fetchAllProducts, fetchProductsByCategory, fetchCategories };

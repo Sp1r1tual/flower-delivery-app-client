@@ -1,26 +1,12 @@
-import { useEffect } from "react";
-
-import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
+import { useShop } from "@/hooks/useShop";
 
 import { DotsLoader } from "../ui/loaders/DotsLoader";
 import { CategoriesList } from "./CategoriesList";
 
-import { fetchCategories } from "@/store/redux/shopThunks";
-
 import styles from "./styles/CategoriesView.module.css";
 
 const CategoriesView = () => {
-  const dispatch = useAppDispatch();
-
-  const { categories, isCategoriesLoading } = useAppSelector(
-    (state) => state.shop,
-  );
-
-  useEffect(() => {
-    if (!categories || categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch, categories]);
+  const { categories, isCategoriesLoading } = useShop();
 
   return (
     <div className={styles.shops}>

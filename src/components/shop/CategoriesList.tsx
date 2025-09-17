@@ -1,18 +1,11 @@
 import { useRef } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/types/reduxHooks";
+import { useShop } from "@/hooks/useShop";
 
 import { ICategory } from "@/types";
 
 import { CategoriesItem } from "./CategoriesItem";
-
 import { ToggleButton } from "../ui/buttons/ToggleBtn";
-
-import { setSelectedCategory } from "@/store/redux/shopSlice";
-import {
-  fetchProductsByCategory,
-  fetchAllProducts,
-} from "@/store/redux/shopThunks";
 
 import styles from "./styles/CategoriesList.module.css";
 
@@ -21,14 +14,10 @@ interface ICategoriesListProps {
 }
 
 const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
-  const dispatch = useAppDispatch();
+  const { selectedCategoryId, selectCategory, showAllProducts } = useShop();
 
   const isOpenRef = useRef(false);
   const listRef = useRef<HTMLDivElement | null>(null);
-
-  const selectedCategoryId = useAppSelector(
-    (state) => state.shop.selectedCategoryId,
-  );
 
   const toggleList = () => {
     isOpenRef.current = !isOpenRef.current;
@@ -36,11 +25,6 @@ const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
     if (listRef.current && styles.open) {
       listRef.current.classList.toggle(styles.open, isOpenRef.current);
     }
-  };
-
-  const handleSelectCategory = (categoryId: string) => {
-    dispatch(setSelectedCategory(categoryId));
-    dispatch(fetchProductsByCategory(categoryId));
   };
 
   return (
@@ -57,7 +41,7 @@ const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
           <CategoriesItem
             key="all"
             text="All Shops"
-            onClick={() => dispatch(fetchAllProducts())}
+            onClick={showAllProducts}
             isSelected={selectedCategoryId === undefined}
           />
         )}
@@ -66,7 +50,7 @@ const CategoriesList = ({ categoryNames }: ICategoriesListProps) => {
           <CategoriesItem
             key={category.id}
             text={category.name}
-            onClick={() => handleSelectCategory(category.id)}
+            onClick={() => selectCategory(category.id)}
             isSelected={selectedCategoryId === category.id}
           />
         ))}

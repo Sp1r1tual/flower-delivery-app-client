@@ -19,7 +19,6 @@ export const useShop = () => {
     isProductsLoading,
     selectedCategoryId,
     hasLoaded,
-    totalPages,
     currentPage,
   } = useAppSelector((state) => state.shop);
 
@@ -42,6 +41,13 @@ export const useShop = () => {
 
     return pages;
   };
+
+  const categoryKey = selectedCategoryId || "all";
+  const cacheEntry = productsCache[categoryKey]?.[currentPage];
+
+  const products = cacheEntry?.products || [];
+  const totalPages = cacheEntry?.totalPages || 0;
+  const total = cacheEntry?.total || 0;
 
   const hasPrev = currentPage > 1;
   const hasNext = currentPage < totalPages;
@@ -71,9 +77,7 @@ export const useShop = () => {
   }, [loadCategories]);
 
   useEffect(() => {
-    const categoryKey = selectedCategoryId || "all";
-
-    if (productsCache[categoryKey]?.[currentPage]) return;
+    if (cacheEntry) return;
 
     if (selectedCategoryId) {
       dispatch(
@@ -86,10 +90,7 @@ export const useShop = () => {
     } else {
       dispatch(fetchAllProducts({ page: currentPage, limit }));
     }
-  }, [dispatch, selectedCategoryId, currentPage, limit, productsCache]);
-
-  const products =
-    productsCache[selectedCategoryId || "all"]?.[currentPage] || [];
+  }, [dispatch, selectedCategoryId, currentPage, limit, cacheEntry]);
 
   return {
     categories,
@@ -100,6 +101,7 @@ export const useShop = () => {
     hasLoaded,
     currentPage,
     totalPages,
+    total,
     hasPrev,
     hasNext,
     getPageNumbers,

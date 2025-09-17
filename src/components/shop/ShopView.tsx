@@ -1,23 +1,32 @@
-import { useShop } from "@/hooks/useShop";
+import { IShop } from "@/types";
 
 import { DotsLoader } from "../ui/loaders/DotsLoader";
-import { ShopList } from "./ShopList";
 import { Pagination } from "../ui/paginations/Pagination";
+import { ShopList } from "./ShopList";
 
 import styles from "./styles/ShopView.module.css";
 
-const ShopView = () => {
-  const {
-    products,
-    isProductsLoading,
-    currentPage,
-    totalPages,
-    hasPrev,
-    hasNext,
-    getPageNumbers,
-    handlePageChange,
-  } = useShop();
+interface ShopViewProps {
+  products: IShop[];
+  isProductsLoading: boolean;
+  currentPage: number;
+  totalPages: number;
+  hasPrev: boolean;
+  hasNext: boolean;
+  getPageNumbers: (totalPages: number) => number[];
+  onPageChange: (page: number) => void;
+}
 
+const ShopView = ({
+  products,
+  isProductsLoading,
+  currentPage,
+  totalPages,
+  hasPrev,
+  hasNext,
+  getPageNumbers,
+  onPageChange,
+}: ShopViewProps) => {
   return (
     <div className={styles.shop}>
       {isProductsLoading ? (
@@ -36,7 +45,7 @@ const ShopView = () => {
             totalPages={totalPages}
             hasPrev={hasPrev}
             hasNext={hasNext}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
             getPageNumbers={getPageNumbers}
           />
         </>

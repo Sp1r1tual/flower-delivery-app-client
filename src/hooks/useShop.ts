@@ -14,7 +14,7 @@ export const useShop = () => {
 
   const {
     categories,
-    products,
+    productsCache,
     isCategoriesLoading,
     isProductsLoading,
     selectedCategoryId,
@@ -52,35 +52,18 @@ export const useShop = () => {
     }
   }, [dispatch, categories]);
 
-  const loadProductsByCategory = useCallback(
-    async (categoryId: string, page = currentPage) => {
-      return await dispatch(
-        fetchProductsByCategory({ categoryId, page, limit }),
-      );
-    },
-    [dispatch, currentPage, limit],
-  );
-
   const selectCategory = (categoryId: string) => {
     dispatch(setSelectedCategory(categoryId));
     dispatch(setCurrentPage(1));
-    loadProductsByCategory(categoryId, 1);
   };
 
   const showAllProducts = () => {
     dispatch(setSelectedCategory(undefined));
     dispatch(setCurrentPage(1));
-    dispatch(fetchAllProducts({ page: 1, limit }));
   };
 
   const handlePageChange = (page: number) => {
     dispatch(setCurrentPage(page));
-
-    if (selectedCategoryId) {
-      loadProductsByCategory(selectedCategoryId, page);
-    } else {
-      dispatch(fetchAllProducts({ page, limit }));
-    }
   };
 
   useEffect(() => {
@@ -88,33 +71,25 @@ export const useShop = () => {
   }, [loadCategories]);
 
   useEffect(() => {
-    if (!categories || categories.length === 0) {
-      loadCategories();
-    }
-  }, [categories, loadCategories]);
+    const categoryKey = selectedCategoryId || "all";
 
-  useEffect(() => {
+    if (productsCache[categoryKey]?.[currentPage]) return;
+
     if (selectedCategoryId) {
-      if (
-        !products ||
-        products.length === 0 ||
-        products.some((p) => p.category.id !== selectedCategoryId)
-      ) {
-        dispatch(setCurrentPage(1));
-        dispatch(
-          fetchProductsByCategory({
-            categoryId: selectedCategoryId,
-            page: 1,
-            limit,
-          }),
-        );
-      }
+      dispatch(
+        fetchProductsByCategory({
+          categoryId: selectedCategoryId,
+          page: currentPage,
+          limit,
+        }),
+      );
     } else {
-      if (!products || products.length === 0) {
-        dispatch(fetchAllProducts({ page: currentPage, limit }));
-      }
+      dispatch(fetchAllProducts({ page: currentPage, limit }));
     }
-  }, [dispatch, selectedCategoryId, products, limit, currentPage]);
+  }, [dispatch, selectedCategoryId, currentPage, limit, productsCache]);
+
+  const products =
+    productsCache[selectedCategoryId || "all"]?.[currentPage] || [];
 
   return {
     categories,

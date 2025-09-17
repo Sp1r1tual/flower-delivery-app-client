@@ -7,12 +7,24 @@ class ShopService {
     return $api.get<IBackendCategory[]>("/categories");
   }
 
-  static getAllProducts() {
-    return $api.get<IBackendProduct[]>("/shop");
+  static getAllProducts(page: number, limit: number) {
+    return $api.get<{
+      items: IBackendProduct[];
+      total: number;
+      totalPages: number;
+    }>("/shop", { params: { page, limit } });
   }
 
-  static getProductsByCategory(categoryId: string) {
-    return $api.get<IBackendProduct[]>(`/shop/category/${categoryId}`);
+  static getProductsByCategory(
+    categoryId: string,
+    page: number,
+    limit: number,
+  ) {
+    return $api.get<{
+      items: IBackendProduct[];
+      total: number;
+      totalPages: number;
+    }>(`/shop/category/${categoryId}`, { params: { page, limit } });
   }
 }
 

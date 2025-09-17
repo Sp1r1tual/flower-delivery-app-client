@@ -1,0 +1,41 @@
+.wrapper {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.backBtnArea {
+  display: flex;
+  align-items: center;
+  height: 3rem;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.content > * {
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+@media (max-width: 576px) {
+  .wrapper {
+    padding: 1rem;
+  }
+
+  .backBtnArea {
+    height: 2.5rem;
+  }
+
+  .content > * {
+    max-width: 100%;
+    margin: 0;
+  }
+}

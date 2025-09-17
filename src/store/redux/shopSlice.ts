@@ -16,6 +16,9 @@ interface IShopState {
   isCategoriesLoading: boolean;
   hasLoaded: boolean;
   error: string | null;
+  total: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 const initialState: IShopState = {
@@ -26,6 +29,9 @@ const initialState: IShopState = {
   isCategoriesLoading: false,
   hasLoaded: false,
   error: null,
+  total: 0,
+  totalPages: 0,
+  currentPage: 1,
 };
 
 const shopSlice = createSlice({
@@ -34,6 +40,9 @@ const shopSlice = createSlice({
   reducers: {
     setSelectedCategory(state, action: PayloadAction<string | undefined>) {
       state.selectedCategoryId = action.payload;
+    },
+    setCurrentPage(state, action: PayloadAction<number>) {
+      state.currentPage = action.payload;
     },
     clearError(state) {
       state.error = null;
@@ -47,7 +56,9 @@ const shopSlice = createSlice({
       })
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.isProductsLoading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.total = action.payload.total;
+        state.totalPages = action.payload.totalPages;
         state.selectedCategoryId = undefined;
         state.hasLoaded = true;
       })
@@ -63,7 +74,10 @@ const shopSlice = createSlice({
       })
       .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
         state.isProductsLoading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.total = action.payload.total;
+        state.totalPages = action.payload.totalPages;
+        state.hasLoaded = true;
       })
       .addCase(fetchProductsByCategory.rejected, (state, action) => {
         state.isProductsLoading = false;
@@ -85,5 +99,6 @@ const shopSlice = createSlice({
   },
 });
 
-export const { setSelectedCategory, clearError } = shopSlice.actions;
+export const { setSelectedCategory, setCurrentPage, clearError } =
+  shopSlice.actions;
 export default shopSlice.reducer;

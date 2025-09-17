@@ -1,25 +1,22 @@
-import { useEffect } from "react";
-
-import { useAppSelector, useAppDispatch } from "@/types/reduxHooks";
+import { useShop } from "@/hooks/useShop";
 
 import { DotsLoader } from "../ui/loaders/DotsLoader";
 import { ShopList } from "./ShopList";
-
-import { fetchAllProducts } from "@/store/redux/shopThunks";
+import { Pagination } from "../ui/paginations/Pagination";
 
 import styles from "./styles/ShopView.module.css";
 
 const ShopView = () => {
-  const dispatch = useAppDispatch();
-
-  const { products, isProductsLoading, selectedCategoryId, hasLoaded } =
-    useAppSelector((state) => state.shop);
-
-  useEffect(() => {
-    if (selectedCategoryId === undefined && !isProductsLoading && !hasLoaded) {
-      dispatch(fetchAllProducts());
-    }
-  }, [dispatch, selectedCategoryId, isProductsLoading, hasLoaded]);
+  const {
+    products,
+    isProductsLoading,
+    currentPage,
+    totalPages,
+    hasPrev,
+    hasNext,
+    getPageNumbers,
+    handlePageChange,
+  } = useShop();
 
   return (
     <div className={styles.shop}>
@@ -28,9 +25,21 @@ const ShopView = () => {
           <DotsLoader />
         </div>
       ) : products.length === 0 ? (
-        <p className={styles.emptyMessage}>No products available</p>
+        <div className={styles.emptyWrapper}>
+          <p className={styles.emptyMessage}>No products available</p>
+        </div>
       ) : (
-        <ShopList shops={products} />
+        <>
+          <ShopList shops={products} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+            onPageChange={handlePageChange}
+            getPageNumbers={getPageNumbers}
+          />
+        </>
       )}
     </div>
   );

@@ -16,6 +16,12 @@ export interface IShop {
   createdAt: string;
 }
 
+export interface IProductsResponse {
+  products: IShop[];
+  total: number;
+  totalPages: number;
+}
+
 export interface IBackendCategory {
   _id: string;
   name: string;

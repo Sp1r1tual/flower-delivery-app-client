@@ -1,20 +1,12 @@
-import { Row } from "@/components/ui/wrappers/Row";
-import { Container } from "@/components/ui/wrappers/Container";
-import { BackBtn } from "@/components/ui/buttons/BackBtn";
 import { OrderView } from "@/components/order/OrderView";
+import { Container } from "@/components/ui/wrappers/Container";
 
 const OrderDetailsPage = () => {
   return (
     <>
-      <Container showBorder={false}>
-        <BackBtn to="/" />
+      <Container>
+        <OrderView />
       </Container>
-
-      <Row margin="3rem">
-        <Container>
-          <OrderView />
-        </Container>
-      </Row>
     </>
   );
 };

@@ -1,6 +1,6 @@
 .order {
   background-color: #fff;
-  width: 30rem;
+  width: 100%;
 }
 
 .order > h2 {
@@ -40,6 +40,6 @@
 
 @media (max-width: 576px) {
   .order {
-    width: 20rem;
+    width: 100%;
   }
 }

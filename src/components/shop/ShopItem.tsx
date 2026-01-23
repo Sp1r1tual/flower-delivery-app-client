@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { useAppDispatch } from "@/types/reduxHooks";
 
@@ -7,6 +7,7 @@ import { ICart, ICategory } from "@/types";
 import { CommonBtn } from "../ui/buttons/CommonBtn";
 import { AddToFavorite } from "../ui/buttons/AddToFavorite";
 import { Toast } from "../ui/toasts/Toast";
+import { ShopImageSkeleton } from "../ui/skeletons/ShopImageSkeleton";
 
 import { addItem } from "@/store/redux/cartSlice";
 
@@ -35,6 +36,13 @@ const ShopItem = ({
 
   const [showToast, setShowToast] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = imageUrl;
+    img.onload = () => setIsImageLoaded(true);
+  }, [imageUrl]);
 
   const handleAddToCart = () => {
     const item: ICart = { id, name, price, imageUrl, category, quantity: 1 };
@@ -49,7 +57,16 @@ const ShopItem = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <img src={imageUrl} alt={name} className={styles.image} />
+      {!isImageLoaded ? (
+        <ShopImageSkeleton />
+      ) : (
+        <img
+          src={imageUrl}
+          alt={name}
+          className={styles.image}
+          onLoad={() => setIsImageLoaded(true)}
+        />
+      )}
 
       <span className={styles.price}>Price: {price}</span>
       <span className={styles.name}>{name}</span>
